@@ -1,0 +1,180 @@
+.heroCard {
+  background: var(--color-accent);
+  color: var(--color-accent-text);
+  border-radius: var(--radius-lg);
+  padding: var(--space-5);
+  margin-bottom: var(--space-6);
+  display: flex;
+  justify-content: space-between;
+  gap: var(--space-4);
+}
+
+.heroStat {
+  flex: 1;
+}
+
+.heroLabel {
+  font-size: var(--font-size-xs);
+  opacity: 0.85;
+}
+
+.heroValue {
+  font-size: var(--font-size-xl);
+  font-weight: var(--font-weight-bold);
+  margin-top: 2px;
+}
+
+.section {
+  margin-bottom: var(--space-6);
+}
+
+.sectionHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  margin-bottom: var(--space-3);
+}
+
+.sectionTitle {
+  font-size: var(--font-size-md);
+  font-weight: var(--font-weight-semibold);
+}
+
+.sectionLink {
+  font-size: var(--font-size-sm);
+  color: var(--color-accent);
+  text-decoration: none;
+}
+
+.compactRow {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  padding: var(--space-2) 0;
+}
+
+.compactDot {
+  width: 26px;
+  height: 26px;
+  border-radius: var(--radius-full);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--color-surface);
+  flex-shrink: 0;
+}
+
+.compactMain {
+  flex: 1;
+  min-width: 0;
+}
+
+.compactLabel {
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-medium);
+  display: flex;
+  justify-content: space-between;
+}
+
+.compactBarTrack {
+  height: 6px;
+  border-radius: var(--radius-full);
+  background: var(--color-surface-alt);
+  overflow: hidden;
+  margin-top: 4px;
+}
+
+.compactBarFill {
+  height: 100%;
+  border-radius: var(--radius-full);
+}
+
+.fillPositive {
+  background: var(--color-positive);
+}
+
+.fillWarning {
+  background: var(--color-warning);
+}
+
+.fillNegative {
+  background: var(--color-negative);
+}
+
+.fillAccent {
+  background: var(--color-accent);
+}
+
+.streakStrip {
+  display: flex;
+  gap: var(--space-4);
+  justify-content: space-around;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  padding: var(--space-4);
+}
+
+.streakItem {
+  text-align: center;
+}
+
+.streakValue {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 2px;
+  font-weight: var(--font-weight-bold);
+  color: var(--color-warning);
+}
+
+.streakValueIdle {
+  color: var(--color-text-faint);
+}
+
+.streakLabel {
+  font-size: var(--font-size-xs);
+  color: var(--color-text-muted);
+  margin-top: 2px;
+}
+
+.levelStrip {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  padding: var(--space-3) var(--space-4);
+  color: inherit;
+  text-decoration: none;
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-medium);
+}
+
+.insightCard {
+  border-radius: var(--radius-md);
+  padding: var(--space-3) var(--space-4);
+  font-size: var(--font-size-sm);
+  margin-bottom: var(--space-2);
+}
+
+.insightWarning {
+  background: var(--color-warning-muted);
+  color: var(--color-warning);
+}
+
+.insightPositive {
+  background: var(--color-positive-muted);
+  color: var(--color-positive);
+}
+
+.insightInfo {
+  background: var(--color-surface-alt);
+  color: var(--color-text-muted);
+}
+
+.empty {
+  color: var(--color-text-faint);
+  font-size: var(--font-size-sm);
+}

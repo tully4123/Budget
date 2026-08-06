@@ -3,6 +3,7 @@ export * from "./user";
 export * from "./income";
 export * from "./category";
 export * from "./transaction";
+export * from "./event";
 export * from "./budget";
 export * from "./goal";
 export * from "./rewards";

@@ -2,11 +2,13 @@ import { create } from "zustand";
 import { createId } from "../lib/id";
 import { today } from "../lib/today";
 import type {
+  AppEvent,
   Budget,
   Category,
   EarnedBadge,
   Goal,
   IncomeSource,
+  LocalDate,
   PlannerSnapshot,
   Transaction,
   UserProfile,
@@ -29,6 +31,7 @@ export interface AppState {
   incomeSources: IncomeSource[];
   categories: Category[];
   transactions: Transaction[];
+  events: AppEvent[];
   budgets: Budget[];
   goals: Goal[];
   earnedBadges: EarnedBadge[];
@@ -58,6 +61,10 @@ export interface AppActions {
   ) => void;
   deleteTransaction: (id: string) => void;
 
+  /** No-op if a check-in already exists for that date (idempotent - the
+   * UI can call this freely without checking first). */
+  addNoSpendDayCheckIn: (date: LocalDate) => void;
+
   /** Upserts by (categoryId, month) - at most one budget per category per
    * month, per the data model. */
   setBudget: (draft: Omit<Budget, "id">) => Budget;
@@ -85,6 +92,7 @@ const initialState: AppState = {
   incomeSources: [],
   categories: [],
   transactions: [],
+  events: [],
   budgets: [],
   goals: [],
   earnedBadges: [],
@@ -100,6 +108,7 @@ export const useAppStore = create<AppStore>((set, get) => ({
       incomeSources,
       categories,
       transactions,
+      events,
       budgets,
       goals,
       earnedBadges,
@@ -109,6 +118,7 @@ export const useAppStore = create<AppStore>((set, get) => ({
       adapter.load<IncomeSource[]>(COLLECTIONS.incomeSources),
       adapter.load<Category[]>(COLLECTIONS.categories),
       adapter.load<Transaction[]>(COLLECTIONS.transactions),
+      adapter.load<AppEvent[]>(COLLECTIONS.events),
       adapter.load<Budget[]>(COLLECTIONS.budgets),
       adapter.load<Goal[]>(COLLECTIONS.goals),
       adapter.load<EarnedBadge[]>(COLLECTIONS.earnedBadges),
@@ -120,6 +130,7 @@ export const useAppStore = create<AppStore>((set, get) => ({
       incomeSources: incomeSources ?? [],
       categories: categories ?? [],
       transactions: transactions ?? [],
+      events: events ?? [],
       budgets: budgets ?? [],
       goals: goals ?? [],
       earnedBadges: earnedBadges ?? [],
@@ -195,6 +206,14 @@ export const useAppStore = create<AppStore>((set, get) => ({
     const transactions = get().transactions.filter((t) => t.id !== id);
     set({ transactions });
     void adapter.save(COLLECTIONS.transactions, transactions);
+  },
+
+  addNoSpendDayCheckIn: (date) => {
+    if (get().events.some((e) => e.type === "noSpendDayCheckIn" && e.date === date)) return;
+    const event: AppEvent = { id: createId(), type: "noSpendDayCheckIn", date, createdAt: nowIso() };
+    const events = [...get().events, event];
+    set({ events });
+    void adapter.save(COLLECTIONS.events, events);
   },
 
   setBudget: (draft) => {

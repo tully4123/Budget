@@ -1,6 +1,7 @@
 import { useState } from "react";
 import type { Transaction } from "../../domain/types";
 import { ScreenHeader } from "../components/ScreenHeader";
+import { NoSpendCheckIn } from "./transactions/NoSpendCheckIn";
 import { TransactionForm } from "./transactions/TransactionForm";
 import { TransactionList } from "./transactions/TransactionList";
 
@@ -15,6 +16,7 @@ export function TransactionsScreen() {
         editing={editing ?? undefined}
         onDone={() => setEditing(null)}
       />
+      <NoSpendCheckIn />
       <TransactionList onEdit={setEditing} />
     </>
   );

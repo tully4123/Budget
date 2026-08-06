@@ -20,6 +20,7 @@ export const COLLECTIONS = {
   incomeSources: "incomeSources",
   categories: "categories",
   transactions: "transactions",
+  events: "events",
   budgets: "budgets",
   goals: "goals",
   earnedBadges: "earnedBadges",

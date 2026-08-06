@@ -1,0 +1,174 @@
+.levelCard {
+  background: var(--color-accent);
+  color: var(--color-accent-text);
+  border-radius: var(--radius-lg);
+  padding: var(--space-5);
+  margin-bottom: var(--space-6);
+}
+
+.levelHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  margin-bottom: var(--space-2);
+}
+
+.levelName {
+  font-size: var(--font-size-lg);
+  font-weight: var(--font-weight-bold);
+}
+
+.pointsValue {
+  font-weight: var(--font-weight-semibold);
+}
+
+.levelBarTrack {
+  height: 10px;
+  border-radius: var(--radius-full);
+  background: rgb(255 255 255 / 25%);
+  overflow: hidden;
+  margin-top: var(--space-3);
+}
+
+.levelBarFill {
+  height: 100%;
+  border-radius: var(--radius-full);
+  background: var(--color-accent-text);
+  transition: width var(--duration-slow) var(--easing-standard);
+}
+
+.levelSubtext {
+  margin-top: var(--space-2);
+  font-size: var(--font-size-xs);
+  opacity: 0.85;
+}
+
+.streakRow {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--space-3);
+  margin-bottom: var(--space-6);
+}
+
+.streakCard {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  padding: var(--space-4);
+  text-align: center;
+}
+
+.streakFlame {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-1);
+  color: var(--color-warning);
+  font-size: var(--font-size-xl);
+  font-weight: var(--font-weight-bold);
+}
+
+.streakFlameIdle {
+  color: var(--color-text-faint);
+}
+
+.streakLabel {
+  margin-top: var(--space-1);
+  font-size: var(--font-size-xs);
+  color: var(--color-text-muted);
+}
+
+.streakBest {
+  font-size: var(--font-size-xs);
+  color: var(--color-text-faint);
+}
+
+.sectionTitle {
+  font-size: var(--font-size-md);
+  font-weight: var(--font-weight-semibold);
+  margin-bottom: var(--space-4);
+}
+
+.badgeGrid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: var(--space-3);
+  margin-bottom: var(--space-6);
+}
+
+.badgeCard {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  padding: var(--space-4);
+  text-align: center;
+}
+
+.badgeCardLocked {
+  opacity: 0.45;
+}
+
+.badgeIcon {
+  width: 40px;
+  height: 40px;
+  border-radius: var(--radius-full);
+  background: var(--color-accent-muted);
+  color: var(--color-accent);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto var(--space-2);
+}
+
+.badgeName {
+  font-weight: var(--font-weight-medium);
+  font-size: var(--font-size-sm);
+}
+
+.badgeDescription {
+  font-size: var(--font-size-xs);
+  color: var(--color-text-muted);
+  margin-top: var(--space-1);
+}
+
+.badgeDate {
+  font-size: var(--font-size-xs);
+  color: var(--color-text-faint);
+  margin-top: var(--space-2);
+}
+
+.celebration {
+  position: fixed;
+  top: var(--space-4);
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: var(--z-toast);
+  background: var(--color-accent);
+  color: var(--color-accent-text);
+  padding: var(--space-4) var(--space-6);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-lg);
+  text-align: center;
+  font-weight: var(--font-weight-semibold);
+  animation: celebrationIn var(--duration-slow) var(--easing-standard);
+}
+
+@keyframes celebrationIn {
+  from {
+    opacity: 0;
+    transform: translateX(-50%) translateY(-12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .celebration {
+    animation: none;
+  }
+  .levelBarFill {
+    transition: none;
+  }
+}

@@ -7,6 +7,7 @@ import {
   daysRemainingInMonth,
   dayOfMonth,
   diffInDays,
+  diffInMonths,
   endOfMonthLocal,
   isAfter,
   isBefore,
@@ -119,6 +120,18 @@ describe("addMonths - month rollover with day clamping", () => {
 
   it("rolls over a year boundary", () => {
     expect(addMonths(localDate("2025-12-15"), 1)).toBe("2026-01-15");
+  });
+});
+
+describe("diffInMonths", () => {
+  it("computes whole calendar months between two dates", () => {
+    expect(diffInMonths(localDate("2026-01-01"), localDate("2026-04-01"))).toBe(3);
+    expect(diffInMonths(localDate("2026-04-01"), localDate("2026-01-01"))).toBe(-3);
+    expect(diffInMonths(localDate("2026-01-01"), localDate("2026-01-31"))).toBe(0);
+  });
+
+  it("counts a calendar month boundary even with only a day of difference", () => {
+    expect(diffInMonths(localDate("2026-01-31"), localDate("2026-02-01"))).toBe(1);
   });
 });
 

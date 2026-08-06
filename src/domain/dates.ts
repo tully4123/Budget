@@ -13,6 +13,7 @@ import {
   addMonths as fnsAddMonths,
   compareAsc,
   differenceInCalendarDays,
+  differenceInCalendarMonths,
   endOfMonth,
   format,
   getDate,
@@ -97,6 +98,11 @@ export function isSameOrAfter(a: LocalDate, b: LocalDate): boolean {
 /** Whole calendar days between two dates (b - a); negative if b is before a. */
 export function diffInDays(a: LocalDate, b: LocalDate): number {
   return differenceInCalendarDays(fromLocalDate(b), fromLocalDate(a));
+}
+
+/** Whole calendar months between two dates (b - a); negative if b is before a. */
+export function diffInMonths(a: LocalDate, b: LocalDate): number {
+  return differenceInCalendarMonths(fromLocalDate(b), fromLocalDate(a));
 }
 
 export function monthKey(date: LocalDate): MonthKey {

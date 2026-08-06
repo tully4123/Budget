@@ -2,20 +2,13 @@ import { useMemo, useState } from "react";
 import { monthKey } from "../../../domain/dates";
 import { cents, negate } from "../../../domain/money";
 import type { Category, Transaction, TransactionType } from "../../../domain/types";
+import { formatMonthLabel } from "../../../lib/format";
 import { useAppStore } from "../../../store/appStore";
 import { CategoryIcon } from "../../components/CategoryIcon";
 import { Money } from "../../components/Money";
 import { Select } from "../../components/Select";
 import { PencilIcon, TrashIcon } from "../../components/icons";
 import styles from "./Transactions.module.css";
-
-function monthLabel(key: string): string {
-  // key is always "YYYY-MM" - it only ever comes from our own monthKey().
-  const parts = key.split("-");
-  const year = Number(parts[0]);
-  const month = Number(parts[1]);
-  return new Date(year, month - 1, 1).toLocaleDateString("en-US", { month: "long", year: "numeric" });
-}
 
 function categoryColor(category: Category | undefined): string {
   return category ? `var(--color-${category.colorToken})` : "var(--color-text-faint)";
@@ -110,7 +103,7 @@ export function TransactionList({ onEdit }: TransactionListProps) {
 
       {groups.map(([key, txs]) => (
         <div key={key} className={styles.monthGroup}>
-          <div className={styles.monthLabel}>{monthLabel(key)}</div>
+          <div className={styles.monthLabel}>{formatMonthLabel(key)}</div>
           {txs.map((tx) => {
             const category = categoryById.get(tx.categoryId);
             const goal = tx.goalId ? goalById.get(tx.goalId) : undefined;

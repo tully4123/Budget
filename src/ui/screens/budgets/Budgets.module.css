@@ -1,0 +1,152 @@
+.monthNav {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-4);
+  margin-bottom: var(--space-5);
+}
+
+.monthLabel {
+  font-weight: var(--font-weight-semibold);
+  min-width: 140px;
+  text-align: center;
+}
+
+.navButton {
+  width: 40px;
+  height: 40px;
+  min-height: 40px;
+  border-radius: var(--radius-full);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--color-surface-alt);
+  color: var(--color-text);
+}
+
+.allowanceCard {
+  background: var(--color-accent);
+  color: var(--color-accent-text);
+  border-radius: var(--radius-lg);
+  padding: var(--space-5);
+  margin-bottom: var(--space-6);
+  text-align: center;
+}
+
+.allowanceLabel {
+  font-size: var(--font-size-sm);
+  opacity: 0.85;
+}
+
+.allowanceValue {
+  font-size: var(--font-size-2xl);
+  font-weight: var(--font-weight-bold);
+  margin-top: var(--space-1);
+}
+
+.rolloverCard {
+  background: var(--color-surface-alt);
+  border-radius: var(--radius-lg);
+  padding: var(--space-5);
+  margin-bottom: var(--space-6);
+  text-align: center;
+}
+
+.rolloverCard p {
+  color: var(--color-text-muted);
+  font-size: var(--font-size-sm);
+  margin: var(--space-2) 0 var(--space-4);
+}
+
+.categoryCard {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  padding: var(--space-4);
+  margin-bottom: var(--space-3);
+}
+
+.categoryHeader {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  margin-bottom: var(--space-3);
+}
+
+.categoryDot {
+  width: 32px;
+  height: 32px;
+  border-radius: var(--radius-full);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--color-surface);
+  flex-shrink: 0;
+}
+
+.categoryName {
+  font-weight: var(--font-weight-medium);
+  flex: 1;
+}
+
+.limitInput {
+  width: 140px;
+  margin-bottom: var(--space-3);
+}
+
+.statsRow {
+  display: flex;
+  justify-content: space-between;
+  font-size: var(--font-size-sm);
+  color: var(--color-text-muted);
+  margin-bottom: var(--space-2);
+}
+
+.barTrack {
+  height: 8px;
+  border-radius: var(--radius-full);
+  background: var(--color-surface-alt);
+  overflow: hidden;
+}
+
+.barFill {
+  height: 100%;
+  border-radius: var(--radius-full);
+  transition: width var(--duration-base) var(--easing-standard);
+}
+
+.fillPositive {
+  background: var(--color-positive);
+}
+
+.fillWarning {
+  background: var(--color-warning);
+}
+
+.fillNegative {
+  background: var(--color-negative);
+}
+
+.paceBadge {
+  display: inline-block;
+  margin-top: var(--space-2);
+  padding: 2px var(--space-2);
+  border-radius: var(--radius-full);
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-medium);
+}
+
+.paceOn {
+  background: var(--color-positive-muted);
+  color: var(--color-positive);
+}
+
+.paceOver {
+  background: var(--color-warning-muted);
+  color: var(--color-warning);
+}
+
+.noLimit {
+  color: var(--color-text-faint);
+  font-size: var(--font-size-sm);
+}

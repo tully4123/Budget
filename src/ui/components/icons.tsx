@@ -224,3 +224,11 @@ export function XIcon(props: IconProps) {
 export function CheckIcon(props: IconProps) {
   return base(<path d="m4 12.5 5.5 5.5L20 6" />, props);
 }
+
+export function ChevronLeftIcon(props: IconProps) {
+  return base(<path d="M15 5 8 12l7 7" />, props);
+}
+
+export function ChevronRightIcon(props: IconProps) {
+  return base(<path d="m9 5 7 7-7 7" />, props);
+}

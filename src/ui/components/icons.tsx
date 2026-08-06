@@ -114,3 +114,113 @@ export function FlameIcon(props: IconProps) {
     props,
   );
 }
+
+export function CartIcon(props: IconProps) {
+  return base(
+    <>
+      <path d="M3 4h2l2.4 12.1a2 2 0 0 0 2 1.6h7.6a2 2 0 0 0 2-1.6L21 8H6" />
+      <circle cx="9.5" cy="20.5" r="1" />
+      <circle cx="17.5" cy="20.5" r="1" />
+    </>,
+    props,
+  );
+}
+
+export function CarIcon(props: IconProps) {
+  return base(
+    <>
+      <path d="M3 15.5 4.6 9a2 2 0 0 1 1.9-1.4h11a2 2 0 0 1 1.9 1.4l1.6 6.5" />
+      <rect x="2.5" y="15.5" width="19" height="4.5" rx="1.5" />
+      <circle cx="7" cy="20" r="1.3" />
+      <circle cx="17" cy="20" r="1.3" />
+    </>,
+    props,
+  );
+}
+
+export function UtensilsIcon(props: IconProps) {
+  return base(
+    <>
+      <path d="M6 2v8a2 2 0 0 0 4 0V2" />
+      <path d="M8 10v12" />
+      <path d="M17 2c-1.7 0-3 2-3 5s1.3 5 3 5v10" />
+    </>,
+    props,
+  );
+}
+
+export function FilmIcon(props: IconProps) {
+  return base(
+    <>
+      <rect x="3" y="4" width="18" height="16" rx="2" />
+      <path d="M3 9h18" />
+      <path d="M3 15h18" />
+      <path d="M8 4v5" />
+      <path d="M8 15v5" />
+    </>,
+    props,
+  );
+}
+
+export function RepeatIcon(props: IconProps) {
+  return base(
+    <>
+      <path d="M4 7h13l-2.5-2.5" />
+      <path d="M20 17H7l2.5 2.5" />
+    </>,
+    props,
+  );
+}
+
+export function HeartIcon(props: IconProps) {
+  return base(
+    <path d="M12 20.5s-7.5-4.6-9.8-9C.7 8.1 2.3 4.5 5.8 4a4.6 4.6 0 0 1 6.2 2 4.6 4.6 0 0 1 6.2-2c3.5.5 5.1 4.1 3.6 7.5-2.3 4.4-9.8 9-9.8 9Z" />,
+    props,
+  );
+}
+
+export function BoxIcon(props: IconProps) {
+  return base(
+    <>
+      <path d="M3 7.5 12 3l9 4.5-9 4.5-9-4.5Z" />
+      <path d="M3 7.5v9L12 21l9-4.5v-9" />
+      <path d="M12 12v9" />
+    </>,
+    props,
+  );
+}
+
+export function TrashIcon(props: IconProps) {
+  return base(
+    <>
+      <path d="M4 7h16" />
+      <path d="M9 7V4.5a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1V7" />
+      <path d="M6 7l1 13a1.5 1.5 0 0 0 1.5 1.4h7a1.5 1.5 0 0 0 1.5-1.4L18 7" />
+    </>,
+    props,
+  );
+}
+
+export function PencilIcon(props: IconProps) {
+  return base(
+    <>
+      <path d="M4 20.5h4L19.5 9a2 2 0 0 0 0-2.8l-1.7-1.7a2 2 0 0 0-2.8 0L4 15.5v5Z" />
+      <path d="M14 5.5 18.5 10" />
+    </>,
+    props,
+  );
+}
+
+export function XIcon(props: IconProps) {
+  return base(
+    <>
+      <path d="M5 5l14 14" />
+      <path d="M19 5 5 19" />
+    </>,
+    props,
+  );
+}
+
+export function CheckIcon(props: IconProps) {
+  return base(<path d="m4 12.5 5.5 5.5L20 6" />, props);
+}

@@ -19,6 +19,7 @@ const BLUEPRINTS: readonly CategoryBlueprint[] = [
   { name: "Health", iconKey: "heart", colorToken: "cat-7", kind: "need" },
   { name: "Misc", iconKey: "box", colorToken: "cat-8", kind: "want" },
   { name: "Savings", iconKey: "flag", colorToken: "cat-9", kind: "savings", isSystem: true },
+  { name: "Income", iconKey: "trending-up", colorToken: "cat-10", kind: "income", isSystem: true },
 ];
 
 /**
@@ -38,13 +39,16 @@ export function createDefaultCategories(nextId: () => Id): Category[] {
   }));
 }
 
-/** Finds the system Savings category among a category list - throws if
- * missing, since every profile must have exactly one (goalContribution
- * transactions depend on it existing). */
-export function findSystemSavingsCategory(categories: readonly Category[]): Category {
-  const found = categories.find((c) => c.isSystem === true);
+/** Finds a system category (Savings for goalContribution transactions,
+ * Income for ad-hoc income transactions) by kind - throws if missing,
+ * since every profile must have exactly one of each. */
+export function findSystemCategory(
+  categories: readonly Category[],
+  kind: "savings" | "income",
+): Category {
+  const found = categories.find((c) => c.isSystem === true && c.kind === kind);
   if (!found) {
-    throw new Error("No system Savings category found - every profile must have exactly one.");
+    throw new Error(`No system ${kind} category found - every profile must have exactly one.`);
   }
   return found;
 }

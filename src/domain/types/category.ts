@@ -1,6 +1,6 @@
 import type { Id } from "./common";
 
-export type CategoryKind = "need" | "want" | "savings";
+export type CategoryKind = "need" | "want" | "savings" | "income";
 
 /** One of the 10 category color slots defined in tokens.css
  * (--color-cat-1 .. --color-cat-10). */
@@ -28,8 +28,8 @@ export interface Category {
   colorToken: CategoryColorToken;
   kind: CategoryKind;
   isArchived: boolean;
-  /** True only for the one system Savings category that goalContribution
-   * transactions are filed under - lets code find it reliably rather than
-   * matching on name (which the user could rename). Not user-creatable. */
+  /** True only for the two system categories (Savings, for goalContribution
+   * transactions; Income, for ad-hoc income transactions) - lets code find
+   * them reliably rather than matching on name. Not user-creatable. */
   isSystem?: boolean;
 }

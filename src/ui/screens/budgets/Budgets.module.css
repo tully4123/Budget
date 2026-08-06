@@ -58,6 +58,24 @@
   margin: var(--space-2) 0 var(--space-4);
 }
 
+.rolloverActions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-3);
+  justify-content: center;
+}
+
+.suggestionHint {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-2);
+  color: var(--color-text-faint);
+  font-size: var(--font-size-xs);
+  margin-top: -4px;
+  margin-bottom: var(--space-2);
+}
+
 .categoryCard {
   background: var(--color-surface);
   border: 1px solid var(--color-border);

@@ -5,6 +5,7 @@ import {
   compareLocalDates,
   daysInMonth,
   daysRemainingInMonth,
+  daysRemainingInWeek,
   dayOfMonth,
   diffInDays,
   diffInMonths,
@@ -207,5 +208,11 @@ describe("week helpers", () => {
     const monday = localDate("2025-12-29");
     expect(weekKey(localDate("2026-01-01"))).toBe(monday);
     expect(weekKey(localDate("2026-01-04"))).toBe(monday);
+  });
+
+  it("daysRemainingInWeek counts today inclusively, Monday-start", () => {
+    expect(daysRemainingInWeek(localDate("2026-03-16"))).toBe(7); // Monday
+    expect(daysRemainingInWeek(localDate("2026-03-17"))).toBe(6); // Tuesday
+    expect(daysRemainingInWeek(localDate("2026-03-22"))).toBe(1); // Sunday - never 0
   });
 });

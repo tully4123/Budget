@@ -1,4 +1,5 @@
-import { addMonths, diffInMonths, isSameOrBefore, type LocalDate } from "../dates";
+import { computeMonthlyAverage } from "../analytics";
+import { addMonths, diffInMonths, type LocalDate } from "../dates";
 import { multiply, subtract, sum, ZERO_CENTS, type Cents } from "../money";
 import type { Goal, GoalWithProgress, Id, Transaction } from "../types";
 
@@ -27,22 +28,13 @@ export function computeAverageMonthlyContribution(
   today: LocalDate,
   windowMonths = 3,
 ): Cents {
-  const windowStart = addMonths(today, -windowMonths);
-  const effectiveStart = isSameOrBefore(goal.createdAt, windowStart) ? windowStart : goal.createdAt;
-  const elapsedMonths = Math.max(diffInMonths(effectiveStart, today), 1);
-
-  const contributed = sum(
-    transactions
-      .filter(
-        (t) =>
-          t.type === "goalContribution" &&
-          t.goalId === goal.id &&
-          isSameOrBefore(effectiveStart, t.date) &&
-          isSameOrBefore(t.date, today),
-      )
-      .map((t) => t.amountCents),
+  return computeMonthlyAverage(
+    transactions,
+    (t) => t.type === "goalContribution" && t.goalId === goal.id,
+    goal.createdAt,
+    today,
+    windowMonths,
   );
-  return multiply(contributed, 1 / elapsedMonths);
 }
 
 /**

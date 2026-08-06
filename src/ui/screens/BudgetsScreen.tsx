@@ -4,6 +4,7 @@ import { addMonths, monthKey } from "../../domain/dates";
 import { formatMonthLabel } from "../../lib/format";
 import { today } from "../../lib/today";
 import { useAppStore } from "../../store/appStore";
+import { usePlannerResult } from "../../store/usePlannerResult";
 import { Button } from "../components/Button";
 import { Money } from "../components/Money";
 import { ChevronLeftIcon, ChevronRightIcon } from "../components/icons";
@@ -38,10 +39,23 @@ export function BudgetsScreen() {
 
   const dailyAllowance = isCurrentMonth ? computeDailyAllowance(budgets, transactions, today()) : null;
 
+  const plan = usePlannerResult();
+  const suggestionByCategory = useMemo(
+    () => new Map((plan?.suggestedBudgets ?? []).map((s) => [s.categoryId, s])),
+    [plan],
+  );
+
   function handleCopyForward() {
     if (!priorMonth) return;
     for (const draft of copyBudgetsForward(priorMonth, month, budgets)) {
       setBudget(draft);
+    }
+  }
+
+  function handleUseSuggestions() {
+    if (!plan) return;
+    for (const s of plan.suggestedBudgets) {
+      setBudget({ categoryId: s.categoryId, month, limitCents: s.suggestedLimitCents });
     }
   }
 
@@ -81,8 +95,15 @@ export function BudgetsScreen() {
       {showRollover && (
         <div className={styles.rolloverCard}>
           <strong>Start {formatMonthLabel(month)} fresh?</strong>
-          <p>Copy last month's budget limits forward, or set new ones below.</p>
-          <Button onClick={handleCopyForward}>Copy last month's budgets</Button>
+          <p>Copy last month's budget limits forward, or apply the planner's suggestions below.</p>
+          <div className={styles.rolloverActions}>
+            <Button variant="secondary" onClick={handleCopyForward}>
+              Copy last month's budgets
+            </Button>
+            {plan && (
+              <Button onClick={handleUseSuggestions}>Use planner suggestions</Button>
+            )}
+          </div>
         </div>
       )}
 
@@ -94,6 +115,7 @@ export function BudgetsScreen() {
             key={cat.id}
             category={cat}
             budget={budgetByCategory.get(cat.id)}
+            suggestion={suggestionByCategory.get(cat.id)}
             month={month}
             transactions={transactions}
             today={today()}

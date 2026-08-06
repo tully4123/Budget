@@ -1,10 +1,11 @@
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { findSystemCategory } from "../../domain/defaultCategories";
 import { detectNewlyCrossedMilestones } from "../../domain/goals/goals";
 import type { Cents } from "../../domain/money";
 import type { Goal } from "../../domain/types";
 import { today } from "../../lib/today";
 import { useAppStore } from "../../store/appStore";
+import { usePlannerResult } from "../../store/usePlannerResult";
 import { Button } from "../components/Button";
 import { ScreenHeader } from "../components/ScreenHeader";
 import { GoalCard } from "./goals/GoalCard";
@@ -33,6 +34,16 @@ export function GoalsScreen() {
 
   const currency = profile?.currency ?? "USD";
   const savingsCategoryId = findSystemCategory(categories, "savings").id;
+
+  const plan = usePlannerResult();
+  const plannerItemByGoal = useMemo(
+    () => new Map((plan?.goalsPlan.items ?? []).map((i) => [i.goalId, i])),
+    [plan],
+  );
+  const tradeOffByGoal = useMemo(
+    () => new Map((plan?.goalsPlan.tradeOffs ?? []).filter((t) => t.goalId).map((t) => [t.goalId as string, t])),
+    [plan],
+  );
 
   function handleContributed(goal: Goal, before: Cents, after: Cents) {
     const crossed = detectNewlyCrossedMilestones(before, after, goal.targetCents);
@@ -73,6 +84,8 @@ export function GoalsScreen() {
           today={today()}
           currency={currency}
           savingsCategoryId={savingsCategoryId}
+          plannerItem={plannerItemByGoal.get(g.id)}
+          tradeOff={tradeOffByGoal.get(g.id)}
           onContributed={handleContributed}
         />
       ))}
@@ -84,6 +97,8 @@ export function GoalsScreen() {
           today={today()}
           currency={currency}
           savingsCategoryId={savingsCategoryId}
+          plannerItem={plannerItemByGoal.get(g.id)}
+          tradeOff={tradeOffByGoal.get(g.id)}
           onContributed={handleContributed}
         />
       ))}

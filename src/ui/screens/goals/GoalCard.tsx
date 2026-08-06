@@ -6,6 +6,7 @@ import {
   requiredMonthlyForTargetDate,
 } from "../../../domain/goals/goals";
 import { add, parseToCents, ZERO_CENTS, type Cents } from "../../../domain/money";
+import type { GoalPlanItem, TradeOffSuggestion } from "../../../domain/planner/types";
 import type { Goal, Transaction } from "../../../domain/types";
 import { useAppStore } from "../../../store/appStore";
 import { Button } from "../../components/Button";
@@ -22,6 +23,8 @@ interface GoalCardProps {
   today: LocalDate;
   currency: string;
   savingsCategoryId: string;
+  plannerItem: GoalPlanItem | undefined;
+  tradeOff: TradeOffSuggestion | undefined;
   onContributed: (goal: Goal, beforeCents: Cents, afterCents: Cents) => void;
 }
 
@@ -31,6 +34,8 @@ export function GoalCard({
   today,
   currency,
   savingsCategoryId,
+  plannerItem,
+  tradeOff,
   onContributed,
 }: GoalCardProps) {
   const addTransaction = useAppStore((s) => s.addTransaction);
@@ -106,6 +111,19 @@ export function GoalCard({
           <div>{requiredMonthly !== null ? <Money cents={requiredMonthly} currency={currency} /> : "—"}</div>
         </div>
       </div>
+
+      {plannerItem && plannerItem.requiredMonthlyCents > ZERO_CENTS && (
+        <div className={styles.metaGrid}>
+          <div>
+            <div className={styles.metaLabel}>Planner allocates</div>
+            <div>
+              <Money cents={plannerItem.allocatedMonthlyCents} currency={currency} tone={plannerItem.isFullyFunded ? "positive" : "negative"} />
+              /mo
+            </div>
+          </div>
+        </div>
+      )}
+      {tradeOff && <p className={styles.tradeOff}>{tradeOff.message}</p>}
 
       {goal.status === "active" && (
         <div className={styles.contributeRow}>

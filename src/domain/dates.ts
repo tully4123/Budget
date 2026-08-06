@@ -146,3 +146,10 @@ export function startOfWeekLocal(date: LocalDate): LocalDate {
 export function weekKey(date: LocalDate): LocalDate {
   return startOfWeekLocal(date);
 }
+
+/** Days left in the calendar week (Monday-start) containing `date`,
+ * counting `date` itself - so a Sunday returns 1, never 0. */
+export function daysRemainingInWeek(date: LocalDate): number {
+  const elapsed = diffInDays(startOfWeekLocal(date), date);
+  return 7 - elapsed;
+}

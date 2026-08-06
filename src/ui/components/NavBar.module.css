@@ -1,0 +1,93 @@
+/* Mobile-first: fixed bottom tab bar. At >=768px it becomes a left rail. */
+
+.nav {
+  position: fixed;
+  inset-inline: 0;
+  bottom: 0;
+  z-index: var(--z-nav);
+  background: var(--color-surface);
+  border-top: 1px solid var(--color-border);
+  padding-bottom: env(safe-area-inset-bottom, 0);
+}
+
+.list {
+  display: flex;
+  justify-content: space-around;
+  align-items: stretch;
+  height: var(--nav-height);
+}
+
+.item {
+  flex: 1;
+  display: flex;
+}
+
+.link {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 2px;
+  color: var(--color-text-faint);
+  text-decoration: none;
+  min-height: var(--tap-target-min);
+  transition: color var(--duration-fast) var(--easing-standard);
+}
+
+.linkActive {
+  color: var(--color-accent);
+}
+
+.icon {
+  width: 22px;
+  height: 22px;
+}
+
+.label {
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-medium);
+}
+
+@media (min-width: 768px) {
+  .nav {
+    position: sticky;
+    top: 0;
+    inset-inline: auto;
+    bottom: auto;
+    height: 100vh;
+    width: 220px;
+    flex-shrink: 0;
+    border-top: none;
+    border-right: 1px solid var(--color-border);
+    padding-bottom: 0;
+  }
+
+  .list {
+    flex-direction: column;
+    height: auto;
+    padding: var(--space-6) var(--space-3);
+    gap: var(--space-1);
+  }
+
+  .item {
+    flex: none;
+  }
+
+  .link {
+    flex-direction: row;
+    justify-content: flex-start;
+    gap: var(--space-3);
+    padding: var(--space-3) var(--space-3);
+    border-radius: var(--radius-md);
+    font-size: var(--font-size-sm);
+  }
+
+  .linkActive {
+    background: var(--color-accent-muted);
+  }
+
+  .label {
+    font-size: var(--font-size-sm);
+  }
+}

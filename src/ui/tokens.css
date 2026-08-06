@@ -1,0 +1,222 @@
+/*
+  Design tokens - the single source of truth for every visual value in the
+  app. Components must reference these custom properties only; no hard-coded
+  hex colors or px sizes outside this file. When the Claude Design direction
+  lands, it should be applied by editing values here (and adding new ones if
+  needed), not by touching component files.
+
+  Theme: light is the default; dark applies automatically via
+  prefers-color-scheme, and can be forced either way with
+  documentElement.dataset.theme = "light" | "dark" (Settings screen, later).
+*/
+
+:root {
+  /* ---------------------------------------------------------------- color: roles */
+  --color-bg: #f7f8fa;
+  --color-surface: #ffffff;
+  --color-surface-alt: #eef0f3;
+  --color-border: #dde1e6;
+  --color-text: #16181d;
+  --color-text-muted: #5b6270;
+  --color-text-faint: #8a90a0;
+
+  --color-accent: #2f6fed;
+  --color-accent-text: #ffffff;
+  --color-accent-muted: #e7eefd;
+
+  --color-positive: #1a8a5f;
+  --color-positive-muted: #e3f5ed;
+  --color-warning: #b4790e;
+  --color-warning-muted: #fbf0dc;
+  --color-negative: #c33f3f;
+  --color-negative-muted: #fbe8e8;
+
+  --color-focus-ring: #2f6fed;
+  --color-overlay: rgb(10 12 16 / 55%);
+
+  /* category palette - 10 slots, assigned to categories via colorToken
+     (e.g. "cat-1"). Chosen for light/dark legibility as pairs below. */
+  --color-cat-1: #2f6fed;
+  --color-cat-2: #1a8a5f;
+  --color-cat-3: #b4790e;
+  --color-cat-4: #c33f3f;
+  --color-cat-5: #7a4fd6;
+  --color-cat-6: #0f9aa8;
+  --color-cat-7: #d6607a;
+  --color-cat-8: #6b7280;
+  --color-cat-9: #a06a2f;
+  --color-cat-10: #3f7fc3;
+
+  /* ---------------------------------------------------------------- type */
+  --font-family-base:
+    -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial,
+    sans-serif;
+  --font-family-mono: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+
+  --font-size-xs: 0.75rem; /* 12px */
+  --font-size-sm: 0.875rem; /* 14px */
+  --font-size-base: 1rem; /* 16px */
+  --font-size-md: 1.125rem; /* 18px */
+  --font-size-lg: 1.375rem; /* 22px */
+  --font-size-xl: 1.75rem; /* 28px */
+  --font-size-2xl: 2.25rem; /* 36px */
+  --font-size-3xl: 2.75rem; /* 44px */
+
+  --font-weight-regular: 400;
+  --font-weight-medium: 500;
+  --font-weight-semibold: 600;
+  --font-weight-bold: 700;
+
+  --line-height-tight: 1.2;
+  --line-height-base: 1.45;
+
+  /* ---------------------------------------------------------------- spacing (4px base scale) */
+  --space-1: 0.25rem; /* 4px */
+  --space-2: 0.5rem; /* 8px */
+  --space-3: 0.75rem; /* 12px */
+  --space-4: 1rem; /* 16px */
+  --space-5: 1.25rem; /* 20px */
+  --space-6: 1.5rem; /* 24px */
+  --space-8: 2rem; /* 32px */
+  --space-10: 2.5rem; /* 40px */
+  --space-12: 3rem; /* 48px */
+  --space-16: 4rem; /* 64px */
+
+  /* ---------------------------------------------------------------- radii / shadows */
+  --radius-sm: 6px;
+  --radius-md: 12px;
+  --radius-lg: 20px;
+  --radius-full: 999px;
+
+  --shadow-sm: 0 1px 2px rgb(16 18 24 / 6%);
+  --shadow-md: 0 4px 16px rgb(16 18 24 / 8%);
+  --shadow-lg: 0 12px 32px rgb(16 18 24 / 12%);
+
+  /* ---------------------------------------------------------------- motion */
+  --duration-fast: 120ms;
+  --duration-base: 200ms;
+  --duration-slow: 400ms;
+  --easing-standard: cubic-bezier(0.2, 0, 0, 1);
+
+  /* ---------------------------------------------------------------- layout */
+  --tap-target-min: 44px;
+  --nav-height: 64px;
+  --content-max-width: 640px;
+  --z-nav: 100;
+  --z-overlay: 200;
+  --z-toast: 300;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --color-bg: #101216;
+    --color-surface: #181b21;
+    --color-surface-alt: #20242c;
+    --color-border: #2c313b;
+    --color-text: #f2f3f5;
+    --color-text-muted: #a7adba;
+    --color-text-faint: #767c8a;
+
+    --color-accent: #5c8bff;
+    --color-accent-text: #0b0e14;
+    --color-accent-muted: #1c2a4a;
+
+    --color-positive: #3ecf8e;
+    --color-positive-muted: #123526;
+    --color-warning: #e3a83b;
+    --color-warning-muted: #3a2c10;
+    --color-negative: #e2685e;
+    --color-negative-muted: #3a1a18;
+
+    --color-focus-ring: #5c8bff;
+    --color-overlay: rgb(0 0 0 / 65%);
+
+    --color-cat-1: #5c8bff;
+    --color-cat-2: #3ecf8e;
+    --color-cat-3: #e3a83b;
+    --color-cat-4: #e2685e;
+    --color-cat-5: #a988ff;
+    --color-cat-6: #3fc4d3;
+    --color-cat-7: #ef8fa4;
+    --color-cat-8: #9aa1b0;
+    --color-cat-9: #c99257;
+    --color-cat-10: #7fb0e6;
+
+    --shadow-sm: 0 1px 2px rgb(0 0 0 / 30%);
+    --shadow-md: 0 4px 16px rgb(0 0 0 / 34%);
+    --shadow-lg: 0 12px 32px rgb(0 0 0 / 40%);
+  }
+}
+
+/* Manual override, for a future Settings theme toggle */
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --color-bg: #101216;
+  --color-surface: #181b21;
+  --color-surface-alt: #20242c;
+  --color-border: #2c313b;
+  --color-text: #f2f3f5;
+  --color-text-muted: #a7adba;
+  --color-text-faint: #767c8a;
+  --color-accent: #5c8bff;
+  --color-accent-text: #0b0e14;
+  --color-accent-muted: #1c2a4a;
+  --color-positive: #3ecf8e;
+  --color-positive-muted: #123526;
+  --color-warning: #e3a83b;
+  --color-warning-muted: #3a2c10;
+  --color-negative: #e2685e;
+  --color-negative-muted: #3a1a18;
+  --color-focus-ring: #5c8bff;
+  --color-overlay: rgb(0 0 0 / 65%);
+  --color-cat-1: #5c8bff;
+  --color-cat-2: #3ecf8e;
+  --color-cat-3: #e3a83b;
+  --color-cat-4: #e2685e;
+  --color-cat-5: #a988ff;
+  --color-cat-6: #3fc4d3;
+  --color-cat-7: #ef8fa4;
+  --color-cat-8: #9aa1b0;
+  --color-cat-9: #c99257;
+  --color-cat-10: #7fb0e6;
+}
+
+:root[data-theme="light"] {
+  color-scheme: light;
+  --color-bg: #f7f8fa;
+  --color-surface: #ffffff;
+  --color-surface-alt: #eef0f3;
+  --color-border: #dde1e6;
+  --color-text: #16181d;
+  --color-text-muted: #5b6270;
+  --color-text-faint: #8a90a0;
+  --color-accent: #2f6fed;
+  --color-accent-text: #ffffff;
+  --color-accent-muted: #e7eefd;
+  --color-positive: #1a8a5f;
+  --color-positive-muted: #e3f5ed;
+  --color-warning: #b4790e;
+  --color-warning-muted: #fbf0dc;
+  --color-negative: #c33f3f;
+  --color-negative-muted: #fbe8e8;
+  --color-focus-ring: #2f6fed;
+  --color-overlay: rgb(10 12 16 / 55%);
+  --color-cat-1: #2f6fed;
+  --color-cat-2: #1a8a5f;
+  --color-cat-3: #b4790e;
+  --color-cat-4: #c33f3f;
+  --color-cat-5: #7a4fd6;
+  --color-cat-6: #0f9aa8;
+  --color-cat-7: #d6607a;
+  --color-cat-8: #6b7280;
+  --color-cat-9: #a06a2f;
+  --color-cat-10: #3f7fc3;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --duration-fast: 0ms;
+    --duration-base: 0ms;
+    --duration-slow: 0ms;
+  }
+}

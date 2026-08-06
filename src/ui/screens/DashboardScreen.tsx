@@ -67,7 +67,9 @@ export function DashboardScreen() {
           </Link>
         </div>
         {monthBudgets.length === 0 ? (
-          <p className={styles.empty}>No budgets set for this month yet.</p>
+          <p className={styles.empty}>
+            No budgets set for this month yet - <Link to="/budgets">set one up</Link>.
+          </p>
         ) : (
           monthBudgets.map((b) => {
             const category = categoryById.get(b.categoryId);
@@ -107,7 +109,9 @@ export function DashboardScreen() {
           </Link>
         </div>
         {activeGoals.length === 0 ? (
-          <p className={styles.empty}>No active goals yet.</p>
+          <p className={styles.empty}>
+            No active goals yet - <Link to="/goals">create one</Link>.
+          </p>
         ) : (
           activeGoals.map((g) => {
             const funded = computeFundedCents(g.id, transactions);

@@ -1,6 +1,7 @@
 import { useEffect } from "react";
 import { Navigate, Route, Routes } from "react-router-dom";
 import { AppShell } from "./ui/components/AppShell";
+import { ErrorBoundary } from "./ui/components/ErrorBoundary";
 import { LoadingScreen } from "./ui/screens/LoadingScreen";
 import { DashboardScreen } from "./ui/screens/DashboardScreen";
 import { TransactionsScreen } from "./ui/screens/TransactionsScreen";
@@ -26,22 +27,24 @@ export function App() {
   }
 
   return (
-    <Routes>
-      <Route
-        path="/onboarding"
-        element={profile ? <Navigate to="/dashboard" replace /> : <OnboardingScreen />}
-      />
-      <Route element={profile ? <AppShell /> : <Navigate to="/onboarding" replace />}>
-        <Route path="/" element={<Navigate to="/dashboard" replace />} />
-        <Route path="/dashboard" element={<DashboardScreen />} />
-        <Route path="/transactions" element={<TransactionsScreen />} />
-        <Route path="/budgets" element={<BudgetsScreen />} />
-        <Route path="/goals" element={<GoalsScreen />} />
-        <Route path="/rewards" element={<RewardsScreen />} />
-        <Route path="/investing" element={<InvestingScreen />} />
-        <Route path="/settings" element={<SettingsScreen />} />
-        <Route path="*" element={<Navigate to="/dashboard" replace />} />
-      </Route>
-    </Routes>
+    <ErrorBoundary>
+      <Routes>
+        <Route
+          path="/onboarding"
+          element={profile ? <Navigate to="/dashboard" replace /> : <OnboardingScreen />}
+        />
+        <Route element={profile ? <AppShell /> : <Navigate to="/onboarding" replace />}>
+          <Route path="/" element={<Navigate to="/dashboard" replace />} />
+          <Route path="/dashboard" element={<DashboardScreen />} />
+          <Route path="/transactions" element={<TransactionsScreen />} />
+          <Route path="/budgets" element={<BudgetsScreen />} />
+          <Route path="/goals" element={<GoalsScreen />} />
+          <Route path="/rewards" element={<RewardsScreen />} />
+          <Route path="/investing" element={<InvestingScreen />} />
+          <Route path="/settings" element={<SettingsScreen />} />
+          <Route path="*" element={<Navigate to="/dashboard" replace />} />
+        </Route>
+      </Routes>
+    </ErrorBoundary>
   );
 }

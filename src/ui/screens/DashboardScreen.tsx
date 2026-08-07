@@ -46,17 +46,15 @@ export function DashboardScreen() {
       <ScreenHeader title="Home" subtitle="How you're doing, at a glance." />
 
       <div className={styles.heroCard}>
-        <div className={styles.heroStat}>
-          <div className={styles.heroLabel}>Safe to spend today</div>
-          <div className={styles.heroValue}>
-            {plan ? <Money cents={plan.safeToSpend.todayCents} currency={currency} tone="accent" /> : "—"}
-          </div>
+        <div className={styles.heroLabel}>Safe to spend today</div>
+        <div className={styles.heroValue}>
+          {plan ? <Money cents={plan.safeToSpend.todayCents} currency={currency} tone="accent" /> : "—"}
         </div>
-        <div className={styles.heroStat}>
-          <div className={styles.heroLabel}>This week</div>
-          <div className={styles.heroValue}>
-            {plan ? <Money cents={plan.safeToSpend.thisWeekCents} currency={currency} tone="accent" /> : "—"}
-          </div>
+        <div className={styles.heroFooter}>
+          <span className={styles.heroFooterLabel}>This week</span>
+          <span className={styles.heroFooterValue}>
+            {plan ? <Money cents={plan.safeToSpend.thisWeekCents} currency={currency} tone="muted" /> : "—"}
+          </span>
         </div>
       </div>
 

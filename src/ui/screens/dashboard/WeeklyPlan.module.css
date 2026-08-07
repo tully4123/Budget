@@ -76,15 +76,55 @@
   flex: 1;
 }
 
-.sliderPercent {
+.amountField {
+  display: inline-flex;
+  align-items: center;
+  color: var(--color-text-faint);
+  font-size: var(--font-size-xs);
+}
+
+.amountPrefix {
+  padding-right: 1px;
+}
+
+.percentField {
+  display: inline-flex;
+  align-items: center;
   font-weight: var(--font-weight-semibold);
   font-variant-numeric: tabular-nums;
 }
 
-.sliderAmount {
-  color: var(--color-text-faint);
-  font-size: var(--font-size-xs);
+.editableAmount,
+.editablePercent {
+  border: none;
+  background: transparent;
+  color: inherit;
+  font: inherit;
   font-variant-numeric: tabular-nums;
+  border-radius: var(--radius-sm);
+  padding: 2px 3px;
+  min-height: 28px;
+  text-align: right;
+}
+
+.editableAmount {
+  width: 56px;
+}
+
+.editablePercent {
+  width: 32px;
+}
+
+.editableAmount:hover,
+.editablePercent:hover {
+  background: var(--color-surface-alt);
+}
+
+.editableAmount:focus-visible,
+.editablePercent:focus-visible {
+  background: var(--color-surface-alt);
+  outline: 2px solid var(--color-focus-ring);
+  outline-offset: 0;
 }
 
 .slider {

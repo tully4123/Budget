@@ -7,8 +7,9 @@ import {
   type AllocationBucket,
 } from "../../../domain/allocation/allocation";
 import { computeWeeklyIncome } from "../../../domain/planner/freeCashFlow";
-import { formatCents } from "../../../domain/money";
+import { formatCents, type Cents } from "../../../domain/money";
 import { useAppStore } from "../../../store/appStore";
+import { AllocationRow } from "./AllocationRow";
 import styles from "./WeeklyPlan.module.css";
 
 const BUCKET_COLOR_TOKEN: Record<AllocationBucket, string> = {
@@ -36,6 +37,7 @@ export function WeeklyPlan() {
 
   const currency = profile?.currency ?? "USD";
   const weeklyIncomeCents = computeWeeklyIncome(incomeSources);
+  const hasIncome = weeklyIncomeCents > 0;
   const amounts = allocationAmounts(weeklyAllocation, weeklyIncomeCents);
 
   const chartData = ALLOCATION_BUCKETS.map((bucket) => ({
@@ -44,15 +46,24 @@ export function WeeklyPlan() {
     color: resolveToken(BUCKET_COLOR_TOKEN[bucket]),
   }));
 
-  function handleSlide(bucket: AllocationBucket, value: number) {
-    setWeeklyAllocation(adjustAllocation(weeklyAllocation, bucket, value));
+  function handleChangePercent(bucket: AllocationBucket, percent: number) {
+    setWeeklyAllocation(adjustAllocation(weeklyAllocation, bucket, percent));
+  }
+
+  /** Typing a dollar amount converts to a percent of weekly income first -
+   * the allocation model is always percentage-based underneath, so a $
+   * edit is really "set the percent that produces this many dollars." */
+  function handleChangeAmount(bucket: AllocationBucket, amountCents: Cents) {
+    if (!hasIncome) return;
+    const percent = Math.round((amountCents / weeklyIncomeCents) * 100);
+    setWeeklyAllocation(adjustAllocation(weeklyAllocation, bucket, percent));
   }
 
   return (
     <div className={styles.card}>
       <p className={styles.body}>
-        How you want to split each week's money. Drag a slider - the others adjust to keep the
-        total at 100%.
+        How you want to split each week's money. Drag a slider, or type a percent or a dollar
+        amount directly - the others adjust to keep the total at 100%.
       </p>
       <div className={styles.layout}>
         <div className={styles.chartWrap}>
@@ -76,34 +87,23 @@ export function WeeklyPlan() {
           </ResponsiveContainer>
           <div className={styles.chartCenter}>
             <div className={styles.chartCenterLabel}>Per week</div>
-            <div className={styles.chartCenterValue}>
-              {weeklyIncomeCents > 0 ? formatCents(weeklyIncomeCents, currency) : "—"}
-            </div>
+            <div className={styles.chartCenterValue}>{hasIncome ? formatCents(weeklyIncomeCents, currency) : "—"}</div>
           </div>
         </div>
 
         <div className={styles.sliders}>
           {ALLOCATION_BUCKETS.map((bucket) => (
-            <div key={bucket} className={styles.sliderRow}>
-              <div className={styles.sliderHeader}>
-                <span className={styles.sliderDot} style={{ background: `var(--color-${BUCKET_COLOR_TOKEN[bucket]})` }} />
-                <span className={styles.sliderLabel}>{ALLOCATION_LABELS[bucket]}</span>
-                {weeklyIncomeCents > 0 && (
-                  <span className={styles.sliderAmount}>{formatCents(amounts[bucket], currency)}</span>
-                )}
-                <span className={styles.sliderPercent}>{weeklyAllocation[bucket]}%</span>
-              </div>
-              <input
-                type="range"
-                className={styles.slider}
-                style={{ "--slider-color": `var(--color-${BUCKET_COLOR_TOKEN[bucket]})` } as React.CSSProperties}
-                min={0}
-                max={100}
-                value={weeklyAllocation[bucket]}
-                onChange={(e) => handleSlide(bucket, Number(e.target.value))}
-                aria-label={`${ALLOCATION_LABELS[bucket]} percent of weekly spending`}
-              />
-            </div>
+            <AllocationRow
+              key={bucket}
+              bucket={bucket}
+              label={ALLOCATION_LABELS[bucket]}
+              colorToken={BUCKET_COLOR_TOKEN[bucket]}
+              percent={weeklyAllocation[bucket]}
+              amountCents={hasIncome ? amounts[bucket] : null}
+              currency={currency}
+              onChangePercent={handleChangePercent}
+              onChangeAmount={handleChangeAmount}
+            />
           ))}
         </div>
       </div>

@@ -233,6 +233,20 @@ export function ChevronRightIcon(props: IconProps) {
   return base(<path d="m9 5 7 7-7 7" />, props);
 }
 
+export function TrophyIcon(props: IconProps) {
+  return base(
+    <>
+      <path d="M7 4h10v5a5 5 0 0 1-10 0V4Z" />
+      <path d="M7 5H4a3 3 0 0 0 3 4.2" />
+      <path d="M17 5h3a3 3 0 0 1-3 4.2" />
+      <path d="M12 14v3" />
+      <path d="M8.5 20.5h7" />
+      <path d="M9.5 17.5h5l.5 3h-6l.5-3Z" />
+    </>,
+    props,
+  );
+}
+
 export function BuddyIcon(props: IconProps) {
   return base(
     <>

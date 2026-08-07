@@ -34,8 +34,9 @@ function useEditableField(displayValue: string, onCommit: (raw: string) => void)
 
   return {
     value: draft,
-    onFocus: () => {
+    onFocus: (e: React.FocusEvent<HTMLInputElement>) => {
       focused.current = true;
+      e.target.select();
     },
     onChange: (e: React.ChangeEvent<HTMLInputElement>) => setDraft(e.target.value),
     onBlur: () => {

@@ -6,7 +6,7 @@ import type { Streak } from "../../domain/types";
 import { today } from "../../lib/today";
 import { useAppStore } from "../../store/appStore";
 import { useRewardState } from "../../store/useRewardState";
-import { FlameIcon, StarIcon } from "../components/icons";
+import { FlameIcon, StarIcon, TrophyIcon } from "../components/icons";
 import { ScreenHeader } from "../components/ScreenHeader";
 import styles from "./rewards/Rewards.module.css";
 
@@ -105,7 +105,11 @@ export function RewardsScreen() {
           return (
             <div key={badge.id} className={earned ? styles.badgeCard : `${styles.badgeCard} ${styles.badgeCardLocked}`}>
               <div className={styles.badgeIcon}>
-                <StarIcon width={20} height={20} />
+                {badge.id === "fully-funded" ? (
+                  <TrophyIcon width={20} height={20} />
+                ) : (
+                  <StarIcon width={20} height={20} />
+                )}
               </div>
               <div className={styles.badgeName}>{badge.name}</div>
               <div className={styles.badgeDescription}>{badge.description}</div>

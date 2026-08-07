@@ -9,7 +9,22 @@
 .body {
   color: var(--color-text-muted);
   font-size: var(--font-size-sm);
+  margin-bottom: var(--space-3);
+}
+
+.summaryLine {
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-medium);
+  color: var(--color-text-muted);
   margin-bottom: var(--space-5);
+}
+
+.summaryWarning {
+  color: var(--color-warning);
+}
+
+.summaryPositive {
+  color: var(--color-positive);
 }
 
 .layout {

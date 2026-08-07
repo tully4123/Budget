@@ -2,12 +2,14 @@ import { Cell, Pie, PieChart, ResponsiveContainer, Tooltip } from "recharts";
 import {
   ALLOCATION_BUCKETS,
   ALLOCATION_LABELS,
-  adjustAllocation,
   allocationAmounts,
+  overAllocatedPercent,
+  setBucketPercent,
+  unallocatedPercent,
   type AllocationBucket,
 } from "../../../domain/allocation/allocation";
 import { computeWeeklyIncome } from "../../../domain/planner/freeCashFlow";
-import { formatCents, type Cents } from "../../../domain/money";
+import { cents, formatCents, type Cents } from "../../../domain/money";
 import { useAppStore } from "../../../store/appStore";
 import { AllocationRow } from "./AllocationRow";
 import styles from "./WeeklyPlan.module.css";
@@ -40,31 +42,61 @@ export function WeeklyPlan() {
   const hasIncome = weeklyIncomeCents > 0;
   const amounts = allocationAmounts(weeklyAllocation, weeklyIncomeCents);
 
+  const leftoverPercent = unallocatedPercent(weeklyAllocation);
+  const overPercent = overAllocatedPercent(weeklyAllocation);
+
   const chartData = ALLOCATION_BUCKETS.map((bucket) => ({
     name: ALLOCATION_LABELS[bucket],
     value: weeklyAllocation[bucket],
     color: resolveToken(BUCKET_COLOR_TOKEN[bucket]),
   }));
+  // Fill the rest of the ring with a neutral "unallocated" slice so each
+  // real slice's angle always means "this many percent of a full week" -
+  // once the plan goes over 100%, there's no room left to show that way,
+  // so the summary line below takes over instead.
+  if (leftoverPercent > 0) {
+    chartData.push({ name: "Unallocated", value: leftoverPercent, color: resolveToken("border") });
+  }
 
   function handleChangePercent(bucket: AllocationBucket, percent: number) {
-    setWeeklyAllocation(adjustAllocation(weeklyAllocation, bucket, percent));
+    setWeeklyAllocation(setBucketPercent(weeklyAllocation, bucket, percent));
   }
 
   /** Typing a dollar amount converts to a percent of weekly income first -
    * the allocation model is always percentage-based underneath, so a $
-   * edit is really "set the percent that produces this many dollars." */
+   * edit is really "set the percent that produces this many dollars." Only
+   * that one bucket changes - the others are untouched. */
   function handleChangeAmount(bucket: AllocationBucket, amountCents: Cents) {
     if (!hasIncome) return;
     const percent = Math.round((amountCents / weeklyIncomeCents) * 100);
-    setWeeklyAllocation(adjustAllocation(weeklyAllocation, bucket, percent));
+    setWeeklyAllocation(setBucketPercent(weeklyAllocation, bucket, percent));
   }
 
   return (
     <div className={styles.card}>
       <p className={styles.body}>
         How you want to split each week's money. Drag a slider, or type a percent or a dollar
-        amount directly - the others adjust to keep the total at 100%.
+        amount - each category is independent, so feel free to leave money unassigned or go over.
       </p>
+      {overPercent > 0 ? (
+        <p className={`${styles.summaryLine} ${styles.summaryWarning}`}>
+          {overPercent}% more than a full week
+          {hasIncome
+            ? ` - about ${formatCents(cents(Math.round((weeklyIncomeCents * overPercent) / 100)), currency)} over what you bring in`
+            : ""}
+          .
+        </p>
+      ) : leftoverPercent > 0 ? (
+        <p className={styles.summaryLine}>
+          {leftoverPercent}% of the week isn't assigned yet
+          {hasIncome
+            ? ` - about ${formatCents(cents(Math.round((weeklyIncomeCents * leftoverPercent) / 100)), currency)} left`
+            : ""}
+          .
+        </p>
+      ) : (
+        <p className={`${styles.summaryLine} ${styles.summaryPositive}`}>Fully allocated.</p>
+      )}
       <div className={styles.layout}>
         <div className={styles.chartWrap}>
           <ResponsiveContainer width="100%" height="100%">

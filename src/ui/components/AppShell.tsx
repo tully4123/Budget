@@ -1,4 +1,5 @@
 import { Outlet } from "react-router-dom";
+import { Buddy } from "./buddy/Buddy";
 import { NavBar } from "./NavBar";
 import styles from "./AppShell.module.css";
 
@@ -13,6 +14,7 @@ export function AppShell() {
           <Outlet />
         </div>
       </main>
+      <Buddy />
     </div>
   );
 }

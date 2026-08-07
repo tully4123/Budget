@@ -103,6 +103,7 @@
   --nav-height: 64px;
   --content-max-width: 640px;
   --z-nav: 100;
+  --z-buddy: 150;
   --z-overlay: 200;
   --z-toast: 300;
 }

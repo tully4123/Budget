@@ -232,3 +232,16 @@ export function ChevronLeftIcon(props: IconProps) {
 export function ChevronRightIcon(props: IconProps) {
   return base(<path d="m9 5 7 7-7 7" />, props);
 }
+
+export function BuddyIcon(props: IconProps) {
+  return base(
+    <>
+      <path d="M12 2.5v2" />
+      <circle cx="12" cy="12.5" r="8.5" />
+      <circle cx="9" cy="11.5" r="1" fill="currentColor" stroke="none" />
+      <circle cx="15" cy="11.5" r="1" fill="currentColor" stroke="none" />
+      <path d="M8.5 15c1 1.1 2.2 1.6 3.5 1.6s2.5-.5 3.5-1.6" />
+    </>,
+    props,
+  );
+}

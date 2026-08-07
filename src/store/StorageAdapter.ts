@@ -26,6 +26,7 @@ export const COLLECTIONS = {
   earnedBadges: "earnedBadges",
   plannerSnapshot: "plannerSnapshot",
   weeklyAllocation: "weeklyAllocation",
+  dismissedTips: "dismissedTips",
 } as const;
 
 export type CollectionKey = (typeof COLLECTIONS)[keyof typeof COLLECTIONS];

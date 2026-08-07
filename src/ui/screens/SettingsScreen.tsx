@@ -33,6 +33,8 @@ export function SettingsScreen() {
   const incomeSources = useAppStore((s) => s.incomeSources);
   const addIncomeSource = useAppStore((s) => s.addIncomeSource);
   const removeIncomeSource = useAppStore((s) => s.removeIncomeSource);
+  const dismissedTips = useAppStore((s) => s.dismissedTips);
+  const resetDismissedTips = useAppStore((s) => s.resetDismissedTips);
   const [busy, setBusy] = useState(false);
   const store = useAppStore();
 
@@ -220,6 +222,25 @@ export function SettingsScreen() {
             </Select>
             <Button onClick={handleAddCategory} disabled={!newCategoryName.trim()}>
               Add category
+            </Button>
+          </div>
+        </div>
+      </div>
+
+      <div className={styles.section}>
+        <div className={styles.sectionTitle}>Tips</div>
+        <div className={styles.card}>
+          <p className={styles.demoBody}>
+            The floating helper button on every screen gives a short tip for what you're looking at.
+            Dismissed tips stay hidden so it doesn't nag - bring them all back here.
+          </p>
+          <div className={styles.demoActions}>
+            <Button
+              variant="secondary"
+              onClick={resetDismissedTips}
+              disabled={dismissedTips.length === 0}
+            >
+              Show tips again
             </Button>
           </div>
         </div>

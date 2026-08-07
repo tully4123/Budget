@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { computeFreeCashFlow, computeMonthlyIncome } from "../../../src/domain/planner/freeCashFlow";
+import { computeFreeCashFlow, computeMonthlyIncome, computeWeeklyIncome } from "../../../src/domain/planner/freeCashFlow";
 import { localDate } from "../../../src/domain/dates";
 import { cents } from "../../../src/domain/money";
 import type { Category, IncomeSource, Transaction } from "../../../src/domain/types";
@@ -54,6 +54,16 @@ describe("computeMonthlyIncome", () => {
 
   it("returns zero with no income sources", () => {
     expect(computeMonthlyIncome([])).toBe(0);
+  });
+});
+
+describe("computeWeeklyIncome", () => {
+  it("annualizes monthly income then divides across 52 weeks", () => {
+    expect(computeWeeklyIncome([income(500000, "monthly")])).toBe(115385);
+  });
+
+  it("returns zero with no income sources", () => {
+    expect(computeWeeklyIncome([])).toBe(0);
   });
 });
 

@@ -13,6 +13,7 @@ import { FlagIcon, FlameIcon, StarIcon } from "../components/icons";
 import { Money } from "../components/Money";
 import { ScreenHeader } from "../components/ScreenHeader";
 import styles from "./dashboard/Dashboard.module.css";
+import { WeeklyPlan } from "./dashboard/WeeklyPlan";
 
 export function DashboardScreen() {
   const profile = useAppStore((s) => s.profile);
@@ -57,6 +58,11 @@ export function DashboardScreen() {
             {plan ? <Money cents={plan.safeToSpend.thisWeekCents} currency={currency} tone="accent" /> : "—"}
           </div>
         </div>
+      </div>
+
+      <div className={styles.section}>
+        <div className={styles.sectionTitle}>Weekly plan</div>
+        <WeeklyPlan />
       </div>
 
       <div className={styles.section}>

@@ -1,4 +1,5 @@
 import { create } from "zustand";
+import { DEFAULT_ALLOCATION, type WeeklyAllocation } from "../domain/allocation/allocation";
 import { createId } from "../lib/id";
 import { today } from "../lib/today";
 import type {
@@ -36,6 +37,7 @@ export interface AppState {
   goals: Goal[];
   earnedBadges: EarnedBadge[];
   plannerSnapshot: PlannerSnapshot | null;
+  weeklyAllocation: WeeklyAllocation;
 }
 
 export interface AppActions {
@@ -80,6 +82,8 @@ export interface AppActions {
 
   setPlannerSnapshot: (snapshot: PlannerSnapshot) => void;
 
+  setWeeklyAllocation: (allocation: WeeklyAllocation) => void;
+
   /** Wipes every collection - used by demo mode's "clear" and account reset. */
   resetAll: () => Promise<void>;
 }
@@ -97,6 +101,7 @@ const initialState: AppState = {
   goals: [],
   earnedBadges: [],
   plannerSnapshot: null,
+  weeklyAllocation: DEFAULT_ALLOCATION,
 };
 
 export const useAppStore = create<AppStore>((set, get) => ({
@@ -113,6 +118,7 @@ export const useAppStore = create<AppStore>((set, get) => ({
       goals,
       earnedBadges,
       plannerSnapshot,
+      weeklyAllocation,
     ] = await Promise.all([
       adapter.load<UserProfile>(COLLECTIONS.profile),
       adapter.load<IncomeSource[]>(COLLECTIONS.incomeSources),
@@ -123,6 +129,7 @@ export const useAppStore = create<AppStore>((set, get) => ({
       adapter.load<Goal[]>(COLLECTIONS.goals),
       adapter.load<EarnedBadge[]>(COLLECTIONS.earnedBadges),
       adapter.load<PlannerSnapshot>(COLLECTIONS.plannerSnapshot),
+      adapter.load<WeeklyAllocation>(COLLECTIONS.weeklyAllocation),
     ]);
     set({
       isLoaded: true,
@@ -135,6 +142,7 @@ export const useAppStore = create<AppStore>((set, get) => ({
       goals: goals ?? [],
       earnedBadges: earnedBadges ?? [],
       plannerSnapshot: plannerSnapshot ?? null,
+      weeklyAllocation: weeklyAllocation ?? DEFAULT_ALLOCATION,
     });
   },
 
@@ -262,6 +270,11 @@ export const useAppStore = create<AppStore>((set, get) => ({
   setPlannerSnapshot: (snapshot) => {
     set({ plannerSnapshot: snapshot });
     void adapter.save(COLLECTIONS.plannerSnapshot, snapshot);
+  },
+
+  setWeeklyAllocation: (allocation) => {
+    set({ weeklyAllocation: allocation });
+    void adapter.save(COLLECTIONS.weeklyAllocation, allocation);
   },
 
   resetAll: async () => {

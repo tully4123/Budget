@@ -36,6 +36,7 @@ interface IncomeDraft {
 }
 
 const STEP_COUNT = 4;
+const STEP_LABELS = ["Profile", "Income", "Categories", "Goal"];
 
 export function OnboardingWizard() {
   const navigate = useNavigate();
@@ -45,6 +46,7 @@ export function OnboardingWizard() {
   const addGoal = useAppStore((s) => s.addGoal);
 
   const [step, setStep] = useState(0);
+  const [maxStepReached, setMaxStepReached] = useState(0);
 
   // Step 1: profile
   const [displayName, setDisplayName] = useState("");
@@ -89,12 +91,23 @@ export function OnboardingWizard() {
       finish();
       return;
     }
-    setStep((s) => s + 1);
+    const nextStep = step + 1;
+    setStep(nextStep);
+    setMaxStepReached((m) => Math.max(m, nextStep));
   }
 
   function goBack() {
     setError(null);
     setStep((s) => Math.max(0, s - 1));
+  }
+
+  /** Jumps directly to any step already reached - lets you fix an earlier
+   * answer without clicking Back repeatedly. Can't skip ahead to a step
+   * you haven't validated your way into yet. */
+  function goToStep(target: number) {
+    if (target > maxStepReached) return;
+    setError(null);
+    setStep(target);
   }
 
   function finish() {
@@ -163,9 +176,20 @@ export function OnboardingWizard() {
     <div className={styles.wrap}>
       <div className={styles.progress}>
         {Array.from({ length: STEP_COUNT }, (_, i) => (
-          <div key={i} className={i <= step ? `${styles.dot} ${styles.dotDone}` : styles.dot} />
+          <button
+            key={i}
+            type="button"
+            aria-label={`Go to step ${i + 1}: ${STEP_LABELS[i]}`}
+            aria-current={i === step ? "step" : undefined}
+            className={i <= step ? `${styles.dot} ${styles.dotDone}` : styles.dot}
+            onClick={() => goToStep(i)}
+            disabled={i > maxStepReached}
+          />
         ))}
       </div>
+      <p className={styles.stepLabel}>
+        Step {step + 1} of {STEP_COUNT} · {STEP_LABELS[step]}
+      </p>
 
       {step === 0 && (
         <div className={styles.step}>

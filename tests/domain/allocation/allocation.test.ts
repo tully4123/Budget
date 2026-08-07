@@ -1,93 +1,98 @@
 import { describe, expect, it } from "vitest";
 import {
   ALLOCATION_BUCKETS,
-  allocationAmounts,
+  allocationPercents,
+  amountForPercent,
   DEFAULT_ALLOCATION,
-  overAllocatedPercent,
-  setBucketPercent,
-  totalAllocatedPercent,
-  unallocatedPercent,
+  overAllocatedCents,
+  setBucketAmount,
+  totalAllocatedCents,
+  unallocatedCents,
   type WeeklyAllocation,
 } from "../../../src/domain/allocation/allocation";
-import { cents } from "../../../src/domain/money";
+import { cents, ZERO_CENTS } from "../../../src/domain/money";
 
-describe("setBucketPercent", () => {
+describe("setBucketAmount", () => {
   it("changes only the touched bucket, leaving the others exactly as they were", () => {
-    const current: WeeklyAllocation = { rent: 35, spending: 25, savings: 20, investments: 15, repayments: 5 };
-    const next = setBucketPercent(current, "rent", 60);
-    expect(next).toEqual({ rent: 60, spending: 25, savings: 20, investments: 15, repayments: 5 });
+    const current: WeeklyAllocation = {
+      rent: cents(35000),
+      spending: cents(25000),
+      savings: cents(20000),
+      investments: cents(15000),
+      repayments: cents(5000),
+    };
+    const next = setBucketAmount(current, "rent", cents(60000));
+    expect(next).toEqual({ ...current, rent: cents(60000) });
   });
 
-  it("clamps to [0, 100]", () => {
-    expect(setBucketPercent(DEFAULT_ALLOCATION, "investments", 130).investments).toBe(100);
-    expect(setBucketPercent(DEFAULT_ALLOCATION, "investments", -20).investments).toBe(0);
+  it("clamps negative amounts to zero", () => {
+    expect(setBucketAmount(DEFAULT_ALLOCATION, "rent", cents(-500)).rent).toBe(ZERO_CENTS);
   });
 
-  it("rounds fractional input", () => {
-    expect(setBucketPercent(DEFAULT_ALLOCATION, "savings", 12.6).savings).toBe(13);
-  });
-
-  it("allows the total to land anywhere - under, over, or at 100", () => {
-    const allLow: WeeklyAllocation = { rent: 5, spending: 5, savings: 5, investments: 5, repayments: 5 };
-    expect(totalAllocatedPercent(allLow)).toBe(25);
-
-    const allHigh: WeeklyAllocation = { rent: 80, spending: 80, savings: 0, investments: 0, repayments: 0 };
-    expect(totalAllocatedPercent(allHigh)).toBe(160);
+  it("starts every bucket at zero by default - no assumed split", () => {
+    for (const b of ALLOCATION_BUCKETS) expect(DEFAULT_ALLOCATION[b]).toBe(ZERO_CENTS);
   });
 
   it("is idempotent when re-applying the same value", () => {
-    const once = setBucketPercent(DEFAULT_ALLOCATION, "savings", 40);
-    const twice = setBucketPercent(once, "savings", 40);
+    const once = setBucketAmount(DEFAULT_ALLOCATION, "savings", cents(4000));
+    const twice = setBucketAmount(once, "savings", cents(4000));
     expect(twice).toEqual(once);
   });
 });
 
-describe("totalAllocatedPercent / unallocatedPercent / overAllocatedPercent", () => {
-  it("reports fully allocated as 100 total, 0 unallocated, 0 over", () => {
-    expect(totalAllocatedPercent(DEFAULT_ALLOCATION)).toBe(100);
-    expect(unallocatedPercent(DEFAULT_ALLOCATION)).toBe(0);
-    expect(overAllocatedPercent(DEFAULT_ALLOCATION)).toBe(0);
+describe("totalAllocatedCents / unallocatedCents / overAllocatedCents", () => {
+  const allocation: WeeklyAllocation = {
+    rent: cents(30000),
+    spending: cents(20000),
+    savings: cents(10000),
+    investments: cents(0),
+    repayments: cents(0),
+  };
+
+  it("sums every bucket", () => {
+    expect(totalAllocatedCents(allocation)).toBe(cents(60000));
   });
 
-  it("reports leftover when under 100", () => {
-    const under: WeeklyAllocation = { rent: 30, spending: 20, savings: 10, investments: 0, repayments: 0 };
-    expect(totalAllocatedPercent(under)).toBe(60);
-    expect(unallocatedPercent(under)).toBe(40);
-    expect(overAllocatedPercent(under)).toBe(0);
+  it("reports leftover against a weekly income above the total", () => {
+    expect(unallocatedCents(allocation, cents(100000))).toBe(cents(40000));
+    expect(overAllocatedCents(allocation, cents(100000))).toBe(ZERO_CENTS);
   });
 
-  it("reports the overage when past 100", () => {
-    const over: WeeklyAllocation = { rent: 60, spending: 40, savings: 20, investments: 0, repayments: 0 };
-    expect(totalAllocatedPercent(over)).toBe(120);
-    expect(unallocatedPercent(over)).toBe(0);
-    expect(overAllocatedPercent(over)).toBe(20);
+  it("reports the overage once the total passes a weekly income", () => {
+    expect(unallocatedCents(allocation, cents(40000))).toBe(ZERO_CENTS);
+    expect(overAllocatedCents(allocation, cents(40000))).toBe(cents(20000));
+  });
+
+  it("is zero-safe with no income to measure against", () => {
+    expect(unallocatedCents(allocation, ZERO_CENTS)).toBe(ZERO_CENTS);
+    expect(overAllocatedCents(allocation, ZERO_CENTS)).toBe(cents(60000));
   });
 });
 
-describe("allocationAmounts", () => {
-  it("gives each bucket its own rounded share, independent of the others", () => {
-    const amounts = allocationAmounts(DEFAULT_ALLOCATION, cents(100000));
-    expect(amounts).toEqual({ rent: 35000, spending: 25000, savings: 20000, investments: 15000, repayments: 5000 });
+describe("allocationPercents / amountForPercent", () => {
+  it("derives whole-percent shares of a known weekly income", () => {
+    const allocation: WeeklyAllocation = {
+      rent: cents(35000),
+      spending: cents(25000),
+      savings: cents(20000),
+      investments: cents(15000),
+      repayments: cents(5000),
+    };
+    const percents = allocationPercents(allocation, cents(100000));
+    expect(percents).toEqual({ rent: 35, spending: 25, savings: 20, investments: 15, repayments: 5 });
   });
 
-  it("does not force amounts to sum back to the weekly total when under-allocated", () => {
-    const under: WeeklyAllocation = { rent: 30, spending: 20, savings: 0, investments: 0, repayments: 0 };
-    const amounts = allocationAmounts(under, cents(10000));
-    expect(amounts.rent).toBe(3000);
-    expect(amounts.spending).toBe(2000);
-    const total = ALLOCATION_BUCKETS.reduce((t, b) => t + amounts[b], 0);
-    expect(total).toBe(5000); // less than the 10000 weekly total - the rest is unallocated
+  it("is zero across the board with no income", () => {
+    const percents = allocationPercents(DEFAULT_ALLOCATION, ZERO_CENTS);
+    for (const b of ALLOCATION_BUCKETS) expect(percents[b]).toBe(0);
   });
 
-  it("can sum to more than the weekly total when over-allocated", () => {
-    const over: WeeklyAllocation = { rent: 70, spending: 60, savings: 0, investments: 0, repayments: 0 };
-    const amounts = allocationAmounts(over, cents(10000));
-    const total = ALLOCATION_BUCKETS.reduce((t, b) => t + amounts[b], 0);
-    expect(total).toBe(13000); // 130% of the weekly total
+  it("amountForPercent is the inverse of allocationPercents at round numbers", () => {
+    expect(amountForPercent(35, cents(100000))).toBe(cents(35000));
+    expect(amountForPercent(0, cents(100000))).toBe(ZERO_CENTS);
   });
 
-  it("handles a zero total", () => {
-    const amounts = allocationAmounts(DEFAULT_ALLOCATION, cents(0));
-    for (const b of ALLOCATION_BUCKETS) expect(amounts[b]).toBe(0);
+  it("amountForPercent is zero with no income to measure against", () => {
+    expect(amountForPercent(50, ZERO_CENTS)).toBe(ZERO_CENTS);
   });
 });

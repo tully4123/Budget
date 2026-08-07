@@ -60,6 +60,13 @@
   font-weight: var(--font-weight-bold);
 }
 
+.chartEmpty {
+  color: var(--color-text-faint);
+  font-size: var(--font-size-sm);
+  text-align: center;
+  padding: 0 var(--space-6);
+}
+
 .sliders {
   display: flex;
   flex-direction: column;

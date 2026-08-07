@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { type AllocationBucket } from "../../../domain/allocation/allocation";
-import { parseToCents, type Cents } from "../../../domain/money";
+import { cents, parseToCents, type Cents } from "../../../domain/money";
 import styles from "./WeeklyPlan.module.css";
 
 function currencySymbol(currency: string): string {
@@ -14,16 +14,20 @@ interface AllocationRowProps {
   bucket: AllocationBucket;
   label: string;
   colorToken: string;
-  percent: number;
-  amountCents: Cents | null;
+  amountCents: Cents;
+  /** Null when there's no weekly income to measure a percent against - the
+   * percent field and slider both hide in that case, leaving amount as the
+   * only (and canonical) way to edit. */
+  percent: number | null;
+  sliderMaxCents: Cents | null;
   currency: string;
-  onChangePercent: (bucket: AllocationBucket, percent: number) => void;
   onChangeAmount: (bucket: AllocationBucket, amountCents: Cents) => void;
+  onChangePercent: (bucket: AllocationBucket, percent: number) => void;
 }
 
-/** A text input that mirrors an external numeric value but doesn't fight
- * the user mid-keystroke: it only re-syncs from `value` while the field
- * isn't focused, and commits (via onCommit) on blur or Enter. */
+/** A text input that mirrors an external value but doesn't fight the user
+ * mid-keystroke: it only re-syncs from `value` while the field isn't
+ * focused, and commits (via onCommit) on blur or Enter. */
 function useEditableField(displayValue: string, onCommit: (raw: string) => void) {
   const [draft, setDraft] = useState(displayValue);
   const focused = useRef(false);
@@ -53,21 +57,21 @@ export function AllocationRow({
   bucket,
   label,
   colorToken,
-  percent,
   amountCents,
+  percent,
+  sliderMaxCents,
   currency,
-  onChangePercent,
   onChangeAmount,
+  onChangePercent,
 }: AllocationRowProps) {
-  const percentField = useEditableField(String(percent), (raw) => {
-    const parsed = Number(raw);
-    if (Number.isFinite(parsed)) onChangePercent(bucket, parsed);
-  });
-
-  const amountDisplay = amountCents !== null ? (amountCents / 100).toFixed(2) : "";
-  const amountField = useEditableField(amountDisplay, (raw) => {
+  const amountField = useEditableField((amountCents / 100).toFixed(2), (raw) => {
     const parsed = parseToCents(raw);
     if (parsed !== null) onChangeAmount(bucket, parsed);
+  });
+
+  const percentField = useEditableField(percent !== null ? String(percent) : "", (raw) => {
+    const parsed = Number(raw);
+    if (Number.isFinite(parsed)) onChangePercent(bucket, parsed);
   });
 
   return (
@@ -75,37 +79,40 @@ export function AllocationRow({
       <div className={styles.sliderHeader}>
         <span className={styles.sliderDot} style={{ background: `var(--color-${colorToken})` }} />
         <span className={styles.sliderLabel}>{label}</span>
-        {amountCents !== null && (
-          <span className={styles.amountField}>
-            <span className={styles.amountPrefix}>{currencySymbol(currency)}</span>
+        <span className={styles.amountField}>
+          <span className={styles.amountPrefix}>{currencySymbol(currency)}</span>
+          <input
+            {...amountField}
+            className={styles.editableAmount}
+            inputMode="decimal"
+            aria-label={`${label} amount per week`}
+          />
+        </span>
+        {percent !== null && (
+          <span className={styles.percentField}>
             <input
-              {...amountField}
-              className={styles.editableAmount}
+              {...percentField}
+              className={styles.editablePercent}
               inputMode="decimal"
-              aria-label={`${label} amount per week`}
+              aria-label={`${label} percent of weekly income`}
             />
+            %
           </span>
         )}
-        <span className={styles.percentField}>
-          <input
-            {...percentField}
-            className={styles.editablePercent}
-            inputMode="decimal"
-            aria-label={`${label} percent of weekly spending`}
-          />
-          %
-        </span>
       </div>
-      <input
-        type="range"
-        className={styles.slider}
-        style={{ "--slider-color": `var(--color-${colorToken})` } as React.CSSProperties}
-        min={0}
-        max={100}
-        value={percent}
-        onChange={(e) => onChangePercent(bucket, Number(e.target.value))}
-        aria-label={`${label} percent of weekly spending (slider)`}
-      />
+      {sliderMaxCents !== null && sliderMaxCents > 0 && (
+        <input
+          type="range"
+          className={styles.slider}
+          style={{ "--slider-color": `var(--color-${colorToken})` } as React.CSSProperties}
+          min={0}
+          max={sliderMaxCents}
+          step={100}
+          value={Math.min(amountCents, sliderMaxCents)}
+          onChange={(e) => onChangeAmount(bucket, cents(Number(e.target.value)))}
+          aria-label={`${label} amount per week (slider)`}
+        />
+      )}
     </div>
   );
 }

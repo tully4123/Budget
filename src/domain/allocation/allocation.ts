@@ -1,19 +1,20 @@
 /**
  * A simple, standalone "how do I want to split my week's money" planner -
- * five independent high-level buckets. Each bucket's percent is set
- * directly and doesn't affect the others; the total across all five isn't
- * forced to any particular value. The UI surfaces how much of the week is
- * still unassigned, or how far over a full week's money the current split
- * goes. Separate from the Category/Budget system (which stays granular,
+ * five independent high-level buckets, each holding its own weekly dollar
+ * amount directly (not a percentage). Amounts are canonical and don't
+ * require income data to be meaningful - percentage-of-income is derived
+ * from them only for display, when income is known. Each bucket is set
+ * independently; the total across all five isn't forced to any particular
+ * value. Separate from the Category/Budget system (which stays granular,
  * per-transaction), this is a lightweight target-allocation view shown on
  * the Dashboard.
  */
-import { cents, type Cents } from "../money";
+import { clampToZero, cents, subtract, sum, ZERO_CENTS, type Cents } from "../money";
 
 export const ALLOCATION_BUCKETS = ["rent", "investments", "savings", "spending", "repayments"] as const;
 export type AllocationBucket = (typeof ALLOCATION_BUCKETS)[number];
 
-export type WeeklyAllocation = Record<AllocationBucket, number>;
+export type WeeklyAllocation = Record<AllocationBucket, Cents>;
 
 export const ALLOCATION_LABELS: Record<AllocationBucket, string> = {
   rent: "Rent",
@@ -24,58 +25,59 @@ export const ALLOCATION_LABELS: Record<AllocationBucket, string> = {
 };
 
 export const DEFAULT_ALLOCATION: WeeklyAllocation = {
-  rent: 35,
-  spending: 25,
-  savings: 20,
-  investments: 15,
-  repayments: 5,
+  rent: ZERO_CENTS,
+  spending: ZERO_CENTS,
+  savings: ZERO_CENTS,
+  investments: ZERO_CENTS,
+  repayments: ZERO_CENTS,
 };
 
-function clampPercent(value: number): number {
-  return Math.max(0, Math.min(100, Math.round(value)));
-}
-
-/** Sets one bucket's percent independently of the others - no
- * redistribution. Each bucket is a standalone 0-100 share of the week's
- * money. */
-export function setBucketPercent(
+/** Sets one bucket's weekly amount independently of the others - no
+ * redistribution. Negative input clamps to zero. */
+export function setBucketAmount(
   current: WeeklyAllocation,
   bucket: AllocationBucket,
-  newValue: number,
+  newAmountCents: Cents,
 ): WeeklyAllocation {
-  return { ...current, [bucket]: clampPercent(newValue) };
+  return { ...current, [bucket]: clampToZero(newAmountCents) };
 }
 
-/** Sum of every bucket's percent. A full week is 100 - under that means
- * some money's unassigned, over means the plan asks for more than a full
- * week's income. */
-export function totalAllocatedPercent(allocation: WeeklyAllocation): number {
-  return ALLOCATION_BUCKETS.reduce((total, b) => total + allocation[b], 0);
+/** Sum of every bucket's weekly amount. */
+export function totalAllocatedCents(allocation: WeeklyAllocation): Cents {
+  return sum(ALLOCATION_BUCKETS.map((b) => allocation[b]));
 }
 
-/** How many percentage points of the week are still unassigned - 0 once
- * the plan reaches (or exceeds) 100%. */
-export function unallocatedPercent(allocation: WeeklyAllocation): number {
-  return Math.max(0, 100 - totalAllocatedPercent(allocation));
+/** How much of a known weekly income is still unassigned - zero once the
+ * plan reaches (or exceeds) it, and zero if there's no income to measure
+ * against. */
+export function unallocatedCents(allocation: WeeklyAllocation, weeklyTotalCents: Cents): Cents {
+  return clampToZero(subtract(weeklyTotalCents, totalAllocatedCents(allocation)));
 }
 
-/** How many percentage points the plan asks for beyond a full week's
- * money - 0 unless the buckets add up to more than 100%. */
-export function overAllocatedPercent(allocation: WeeklyAllocation): number {
-  return Math.max(0, totalAllocatedPercent(allocation) - 100);
+/** How much the plan asks for beyond a known weekly income - zero unless
+ * the buckets add up to more than that. */
+export function overAllocatedCents(allocation: WeeklyAllocation, weeklyTotalCents: Cents): Cents {
+  return clampToZero(subtract(totalAllocatedCents(allocation), weeklyTotalCents));
 }
 
-/** Each bucket's independent dollar share of a weekly total, rounded to
- * the nearest cent. Buckets no longer have to sum to 100%, so these
- * amounts aren't forced to sum back to `weeklyTotalCents` either - that's
- * expected whenever the plan is under- or over-allocated. */
-export function allocationAmounts(
+/** Each bucket's share of a weekly income, as a whole-number percent - purely
+ * a display convenience derived from the canonical dollar amounts. Zero
+ * across the board when there's no income to measure against. */
+export function allocationPercents(
   allocation: WeeklyAllocation,
   weeklyTotalCents: Cents,
-): Record<AllocationBucket, Cents> {
-  const out = {} as Record<AllocationBucket, Cents>;
+): Record<AllocationBucket, number> {
+  const out = {} as Record<AllocationBucket, number>;
   for (const b of ALLOCATION_BUCKETS) {
-    out[b] = cents(Math.round((weeklyTotalCents * allocation[b]) / 100));
+    out[b] = weeklyTotalCents > 0 ? Math.round((allocation[b] / weeklyTotalCents) * 100) : 0;
   }
   return out;
+}
+
+/** Converts a target percent-of-income into the equivalent weekly amount -
+ * the inverse of allocationPercents, used when the user edits the percent
+ * field directly. Zero if there's no income to measure against. */
+export function amountForPercent(percent: number, weeklyTotalCents: Cents): Cents {
+  if (weeklyTotalCents <= 0) return ZERO_CENTS;
+  return clampToZero(cents(Math.round((weeklyTotalCents * percent) / 100)));
 }

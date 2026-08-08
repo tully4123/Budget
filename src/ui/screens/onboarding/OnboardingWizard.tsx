@@ -36,6 +36,7 @@ interface IncomeDraft {
 }
 
 const STEP_COUNT = 4;
+const STEP_LABELS = ["Profile", "Income", "Categories", "Goal"];
 
 export function OnboardingWizard() {
   const navigate = useNavigate();
@@ -45,6 +46,7 @@ export function OnboardingWizard() {
   const addGoal = useAppStore((s) => s.addGoal);
 
   const [step, setStep] = useState(0);
+  const [maxStepReached, setMaxStepReached] = useState(0);
 
   // Step 1: profile
   const [displayName, setDisplayName] = useState("");
@@ -78,18 +80,17 @@ export function OnboardingWizard() {
         return;
       }
     }
-    if (step === 1) {
-      const valid = incomeDrafts.filter((d) => d.name.trim() && parseToCents(d.amount) !== null);
-      if (valid.length === 0) {
-        setError("Add at least one income source with a name and amount.");
-        return;
-      }
-    }
+    // Income (step 1) and the first goal (step 3) are optional - nothing
+    // blocks moving on. Whatever's actually filled in gets saved; the
+    // rest is silently skipped. Both can be added anytime later (income
+    // from Settings, goals from the Goals page).
     if (step === STEP_COUNT - 1) {
       finish();
       return;
     }
-    setStep((s) => s + 1);
+    const nextStep = step + 1;
+    setStep(nextStep);
+    setMaxStepReached((m) => Math.max(m, nextStep));
   }
 
   function goBack() {
@@ -97,13 +98,16 @@ export function OnboardingWizard() {
     setStep((s) => Math.max(0, s - 1));
   }
 
-  function finish() {
-    const parsedGoalAmount = parseToCents(goalAmount);
-    if (!goalName.trim() || parsedGoalAmount === null || parsedGoalAmount <= ZERO_CENTS) {
-      setError("Give your goal a name and a target amount above zero.");
-      return;
-    }
+  /** Jumps directly to any step already reached - lets you fix an earlier
+   * answer without clicking Back repeatedly. Can't skip ahead to a step
+   * you haven't validated your way into yet. */
+  function goToStep(target: number) {
+    if (target > maxStepReached) return;
+    setError(null);
+    setStep(target);
+  }
 
+  function finish() {
     const keptCategories = allCategories.filter((c) => c.isSystem || selectedIds.includes(c.id));
     setCategories(keptCategories);
 
@@ -118,14 +122,20 @@ export function OnboardingWizard() {
       });
     }
 
-    addGoal({
-      name: goalName.trim(),
-      iconKey: "flag",
-      targetCents: parsedGoalAmount,
-      targetDate: goalTargetDate ? localDate(goalTargetDate) : undefined,
-      priority: goalPriority,
-      status: "active",
-    });
+    // The goal is optional - only create one if a name and a real
+    // amount were actually entered. Skipping this step just means
+    // finishing with no goal yet; the Goals page covers it anytime.
+    const parsedGoalAmount = parseToCents(goalAmount);
+    if (goalName.trim() && parsedGoalAmount !== null && parsedGoalAmount > ZERO_CENTS) {
+      addGoal({
+        name: goalName.trim(),
+        iconKey: "flag",
+        targetCents: parsedGoalAmount,
+        targetDate: goalTargetDate ? localDate(goalTargetDate) : undefined,
+        priority: goalPriority,
+        status: "active",
+      });
+    }
 
     // Written last - this is what the router uses to decide onboarding is
     // complete, so it should only flip once everything else has landed.
@@ -159,13 +169,40 @@ export function OnboardingWizard() {
     setSelectedIds((ids) => (ids.includes(id) ? ids.filter((x) => x !== id) : [...ids, id]));
   }
 
+  /** Explicitly abandons whatever's been typed on this step, rather than
+   * just relying on "Next" saving nothing when a field happens to be
+   * empty - clicking Skip should always mean skip, even if you'd
+   * half-filled something in. */
+  function skipIncome() {
+    setIncomeDrafts([{ key: createId(), name: "", amount: "", frequency: payFrequency, nextDate: today() }]);
+    goNext();
+  }
+
+  function skipGoal() {
+    setGoalName("");
+    setGoalAmount("");
+    setGoalTargetDate("");
+    finish();
+  }
+
   return (
     <div className={styles.wrap}>
       <div className={styles.progress}>
         {Array.from({ length: STEP_COUNT }, (_, i) => (
-          <div key={i} className={i <= step ? `${styles.dot} ${styles.dotDone}` : styles.dot} />
+          <button
+            key={i}
+            type="button"
+            aria-label={`Go to step ${i + 1}: ${STEP_LABELS[i]}`}
+            aria-current={i === step ? "step" : undefined}
+            className={i <= step ? `${styles.dot} ${styles.dotDone}` : styles.dot}
+            onClick={() => goToStep(i)}
+            disabled={i > maxStepReached}
+          />
         ))}
       </div>
+      <p className={styles.stepLabel}>
+        Step {step + 1} of {STEP_COUNT} · {STEP_LABELS[step]}
+      </p>
 
       {step === 0 && (
         <div className={styles.step}>
@@ -205,7 +242,10 @@ export function OnboardingWizard() {
         <div className={styles.step}>
           <div>
             <h1 className={styles.title}>Where's your money coming from?</h1>
-            <p className={styles.subtitle}>Add at least one income source. You can add more later.</p>
+            <p className={styles.subtitle}>
+              Optional - add it now or anytime later from Settings. Skip it and move on if you'd
+              rather explore first.
+            </p>
           </div>
           {incomeDrafts.map((draft, i) => (
             <div key={draft.key} className={styles.incomeRow}>
@@ -273,7 +313,9 @@ export function OnboardingWizard() {
         <div className={styles.step}>
           <div>
             <h1 className={styles.title}>Set your first goal</h1>
-            <p className={styles.subtitle}>What are you saving toward?</p>
+            <p className={styles.subtitle}>
+              Optional - what are you saving toward? You can create one anytime from the Goals page.
+            </p>
           </div>
           <TextField
             label="Goal name"
@@ -312,6 +354,17 @@ export function OnboardingWizard() {
       )}
 
       {error ? <p className={styles.error}>{error}</p> : null}
+
+      {step === 1 && (
+        <Button variant="ghost" onClick={skipIncome} className={styles.skipButton}>
+          Skip for now
+        </Button>
+      )}
+      {step === 3 && (
+        <Button variant="ghost" onClick={skipGoal} className={styles.skipButton}>
+          Skip and finish
+        </Button>
+      )}
 
       <div className={styles.nav}>
         {step > 0 && (

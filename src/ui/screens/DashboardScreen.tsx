@@ -13,6 +13,7 @@ import { FlagIcon, FlameIcon, StarIcon } from "../components/icons";
 import { Money } from "../components/Money";
 import { ScreenHeader } from "../components/ScreenHeader";
 import styles from "./dashboard/Dashboard.module.css";
+import { WeeklyPlan } from "./dashboard/WeeklyPlan";
 
 export function DashboardScreen() {
   const profile = useAppStore((s) => s.profile);
@@ -45,18 +46,21 @@ export function DashboardScreen() {
       <ScreenHeader title="Home" subtitle="How you're doing, at a glance." />
 
       <div className={styles.heroCard}>
-        <div className={styles.heroStat}>
-          <div className={styles.heroLabel}>Safe to spend today</div>
-          <div className={styles.heroValue}>
-            {plan ? <Money cents={plan.safeToSpend.todayCents} currency={currency} tone="accent" /> : "—"}
-          </div>
+        <div className={styles.heroLabel}>Safe to spend today</div>
+        <div className={styles.heroValue}>
+          {plan ? <Money cents={plan.safeToSpend.todayCents} currency={currency} tone="accent" /> : "—"}
         </div>
-        <div className={styles.heroStat}>
-          <div className={styles.heroLabel}>This week</div>
-          <div className={styles.heroValue}>
-            {plan ? <Money cents={plan.safeToSpend.thisWeekCents} currency={currency} tone="accent" /> : "—"}
-          </div>
+        <div className={styles.heroFooter}>
+          <span className={styles.heroFooterLabel}>This week</span>
+          <span className={styles.heroFooterValue}>
+            {plan ? <Money cents={plan.safeToSpend.thisWeekCents} currency={currency} tone="muted" /> : "—"}
+          </span>
         </div>
+      </div>
+
+      <div className={styles.section}>
+        <div className={styles.sectionTitle}>Weekly plan</div>
+        <WeeklyPlan />
       </div>
 
       <div className={styles.section}>
@@ -67,7 +71,9 @@ export function DashboardScreen() {
           </Link>
         </div>
         {monthBudgets.length === 0 ? (
-          <p className={styles.empty}>No budgets set for this month yet.</p>
+          <p className={styles.empty}>
+            No budgets set for this month yet - <Link to="/budgets">set one up</Link>.
+          </p>
         ) : (
           monthBudgets.map((b) => {
             const category = categoryById.get(b.categoryId);
@@ -107,7 +113,9 @@ export function DashboardScreen() {
           </Link>
         </div>
         {activeGoals.length === 0 ? (
-          <p className={styles.empty}>No active goals yet.</p>
+          <p className={styles.empty}>
+            No active goals yet - <Link to="/goals">create one</Link>.
+          </p>
         ) : (
           activeGoals.map((g) => {
             const funded = computeFundedCents(g.id, transactions);

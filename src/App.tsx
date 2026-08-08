@@ -1,6 +1,7 @@
 import { useEffect } from "react";
 import { Navigate, Route, Routes } from "react-router-dom";
 import { AppShell } from "./ui/components/AppShell";
+import { ErrorBoundary } from "./ui/components/ErrorBoundary";
 import { ThemePreview } from "./ui/components/ThemePreview";
 import { LoadingScreen } from "./ui/screens/LoadingScreen";
 import { DashboardScreen } from "./ui/screens/DashboardScreen";
@@ -27,7 +28,7 @@ export function App() {
   }
 
   return (
-    <>
+    <ErrorBoundary>
       <ThemePreview />
       <Routes>
         <Route
@@ -46,6 +47,6 @@ export function App() {
           <Route path="*" element={<Navigate to="/dashboard" replace />} />
         </Route>
       </Routes>
-    </>
+    </ErrorBoundary>
   );
 }

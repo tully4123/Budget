@@ -12,7 +12,7 @@ import { useAppStore } from "../../../store/appStore";
 import { Button } from "../../components/Button";
 import { Money } from "../../components/Money";
 import { TextField } from "../../components/TextField";
-import { FlagIcon } from "../../components/icons";
+import { FlagIcon, TrophyIcon } from "../../components/icons";
 import styles from "./Goals.module.css";
 
 const PRIORITY_LABEL: Record<Goal["priority"], string> = { high: "High", medium: "Medium", low: "Low" };
@@ -46,6 +46,7 @@ export function GoalCard({
 
   const funded = computeFundedCents(goal.id, transactions);
   const percent = goal.targetCents > ZERO_CENTS ? Math.min((funded / goal.targetCents) * 100, 100) : 0;
+  const isComplete = goal.status === "completed";
   const projected = goal.status === "active" ? projectedCompletionDate(goal, transactions, today) : null;
   const requiredMonthly =
     goal.status === "active" ? requiredMonthlyForTargetDate(goal, transactions, today) : null;
@@ -78,13 +79,17 @@ export function GoalCard({
     <div className={styles.card}>
       <div className={styles.cardHeader}>
         <div className={styles.cardTitleRow}>
-          <span className={styles.iconDot}>
-            <FlagIcon width={18} height={18} />
+          <span className={isComplete ? `${styles.iconDot} ${styles.iconDotComplete}` : styles.iconDot}>
+            {isComplete ? <TrophyIcon width={18} height={18} /> : <FlagIcon width={18} height={18} />}
           </span>
           <span>
             <div className={styles.name}>{goal.name}</div>
             <span className={styles.priorityBadge}>{PRIORITY_LABEL[goal.priority]} priority</span>{" "}
-            {goal.status === "completed" && <span className={styles.statusBadge}>Completed</span>}
+            {isComplete && (
+              <span className={styles.trophyBadge}>
+                <TrophyIcon width={12} height={12} /> Completed
+              </span>
+            )}
             {goal.status === "paused" && <span className={styles.priorityBadge}>Paused</span>}
           </span>
         </div>
@@ -98,7 +103,10 @@ export function GoalCard({
         <span>{percent.toFixed(0)}%</span>
       </div>
       <div className={styles.barTrack}>
-        <div className={styles.barFill} style={{ width: `${percent}%` }} />
+        <div
+          className={percent >= 100 ? `${styles.barFill} ${styles.barFillComplete}` : styles.barFill}
+          style={{ width: `${percent}%` }}
+        />
       </div>
 
       <div className={styles.metaGrid}>

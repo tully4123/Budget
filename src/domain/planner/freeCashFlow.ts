@@ -19,6 +19,13 @@ export function computeMonthlyIncome(incomeSources: readonly IncomeSource[]): Ce
   return sum(incomeSources.map((s) => multiply(s.amountCents, MONTHLY_FACTOR[s.frequency])));
 }
 
+/** Monthly income annualized then divided across 52 weeks - the
+ * conversion the Weekly Plan allocator uses to show a $/week figure
+ * next to each slider. */
+export function computeWeeklyIncome(incomeSources: readonly IncomeSource[]): Cents {
+  return multiply(computeMonthlyIncome(incomeSources), 12 / 52);
+}
+
 /**
  * Free cash flow = monthly income - average "need" category spending
  * (the trailing 3-month average, since account creation if younger).

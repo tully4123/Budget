@@ -1,27 +1,43 @@
 .heroCard {
-  background: var(--color-accent);
-  color: var(--color-accent-text);
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
   border-radius: var(--radius-lg);
-  padding: var(--space-5);
+  padding: var(--space-5) var(--space-5) var(--space-4);
   margin-bottom: var(--space-6);
-  display: flex;
-  justify-content: space-between;
-  gap: var(--space-4);
-}
-
-.heroStat {
-  flex: 1;
+  box-shadow: var(--shadow-sm);
 }
 
 .heroLabel {
-  font-size: var(--font-size-xs);
-  opacity: 0.85;
+  font-size: var(--font-size-sm);
+  color: var(--color-text-muted);
+  font-weight: var(--font-weight-medium);
 }
 
 .heroValue {
-  font-size: var(--font-size-xl);
+  font-size: var(--font-size-3xl);
   font-weight: var(--font-weight-bold);
-  margin-top: 2px;
+  letter-spacing: -0.01em;
+  margin-top: var(--space-1);
+}
+
+.heroFooter {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: var(--space-4);
+  padding-top: var(--space-3);
+  border-top: 1px solid var(--color-border);
+}
+
+.heroFooterLabel {
+  font-size: var(--font-size-xs);
+  color: var(--color-text-faint);
+}
+
+.heroFooterValue {
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-text-muted);
 }
 
 .section {
@@ -177,4 +193,9 @@
 .empty {
   color: var(--color-text-faint);
   font-size: var(--font-size-sm);
+}
+
+.empty a {
+  color: var(--color-accent);
+  text-decoration: none;
 }

@@ -1,4 +1,5 @@
 import { create } from "zustand";
+import { DEFAULT_ALLOCATION, type WeeklyAllocation } from "../domain/allocation/allocation";
 import { createId } from "../lib/id";
 import { today } from "../lib/today";
 import type {
@@ -36,6 +37,11 @@ export interface AppState {
   goals: Goal[];
   earnedBadges: EarnedBadge[];
   plannerSnapshot: PlannerSnapshot | null;
+  weeklyAllocation: WeeklyAllocation;
+  /** Tip ids the user has acknowledged in the floating Buddy helper - kept
+   * so a tip doesn't nag again once dismissed, but can always be reopened
+   * on demand from the same widget. */
+  dismissedTips: string[];
 }
 
 export interface AppActions {
@@ -80,6 +86,13 @@ export interface AppActions {
 
   setPlannerSnapshot: (snapshot: PlannerSnapshot) => void;
 
+  setWeeklyAllocation: (allocation: WeeklyAllocation) => void;
+
+  dismissTip: (id: string) => void;
+  /** Clears all dismissed tips so the Buddy helper's badges reappear -
+   * exposed as "Show tips again" in Settings. */
+  resetDismissedTips: () => void;
+
   /** Wipes every collection - used by demo mode's "clear" and account reset. */
   resetAll: () => Promise<void>;
 }
@@ -97,6 +110,8 @@ const initialState: AppState = {
   goals: [],
   earnedBadges: [],
   plannerSnapshot: null,
+  weeklyAllocation: DEFAULT_ALLOCATION,
+  dismissedTips: [],
 };
 
 export const useAppStore = create<AppStore>((set, get) => ({
@@ -113,6 +128,8 @@ export const useAppStore = create<AppStore>((set, get) => ({
       goals,
       earnedBadges,
       plannerSnapshot,
+      weeklyAllocation,
+      dismissedTips,
     ] = await Promise.all([
       adapter.load<UserProfile>(COLLECTIONS.profile),
       adapter.load<IncomeSource[]>(COLLECTIONS.incomeSources),
@@ -123,6 +140,8 @@ export const useAppStore = create<AppStore>((set, get) => ({
       adapter.load<Goal[]>(COLLECTIONS.goals),
       adapter.load<EarnedBadge[]>(COLLECTIONS.earnedBadges),
       adapter.load<PlannerSnapshot>(COLLECTIONS.plannerSnapshot),
+      adapter.load<WeeklyAllocation>(COLLECTIONS.weeklyAllocation),
+      adapter.load<string[]>(COLLECTIONS.dismissedTips),
     ]);
     set({
       isLoaded: true,
@@ -135,6 +154,8 @@ export const useAppStore = create<AppStore>((set, get) => ({
       goals: goals ?? [],
       earnedBadges: earnedBadges ?? [],
       plannerSnapshot: plannerSnapshot ?? null,
+      weeklyAllocation: weeklyAllocation ?? DEFAULT_ALLOCATION,
+      dismissedTips: dismissedTips ?? [],
     });
   },
 
@@ -262,6 +283,22 @@ export const useAppStore = create<AppStore>((set, get) => ({
   setPlannerSnapshot: (snapshot) => {
     set({ plannerSnapshot: snapshot });
     void adapter.save(COLLECTIONS.plannerSnapshot, snapshot);
+  },
+
+  setWeeklyAllocation: (allocation) => {
+    set({ weeklyAllocation: allocation });
+    void adapter.save(COLLECTIONS.weeklyAllocation, allocation);
+  },
+
+  dismissTip: (id) => {
+    if (get().dismissedTips.includes(id)) return;
+    const dismissedTips = [...get().dismissedTips, id];
+    set({ dismissedTips });
+    void adapter.save(COLLECTIONS.dismissedTips, dismissedTips);
+  },
+  resetDismissedTips: () => {
+    set({ dismissedTips: [] });
+    void adapter.save(COLLECTIONS.dismissedTips, []);
   },
 
   resetAll: async () => {

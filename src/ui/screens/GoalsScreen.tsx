@@ -62,7 +62,7 @@ export function GoalsScreen() {
       {celebration && (
         <div className={styles.celebration} role="status">
           {celebration.percent >= 100
-            ? `🎉 ${celebration.goalName} is fully funded!`
+            ? `🏆 ${celebration.goalName} is fully funded!`
             : `🎉 ${celebration.percent}% of the way to ${celebration.goalName}!`}
         </div>
       )}

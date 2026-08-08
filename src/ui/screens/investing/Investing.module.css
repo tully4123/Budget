@@ -1,73 +1,171 @@
-.wrap {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  text-align: center;
-  padding: var(--space-10) var(--space-4);
-}
-
-.iconDot {
-  width: 72px;
-  height: 72px;
-  border-radius: var(--radius-full);
-  background: var(--color-accent-muted);
-  color: var(--color-accent);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  margin-bottom: var(--space-5);
-}
-
-.title {
-  font-size: var(--font-size-lg);
-  font-weight: var(--font-weight-bold);
-  margin-bottom: var(--space-2);
-}
-
-.body {
-  color: var(--color-text-muted);
+.sectionTitle {
   font-size: var(--font-size-sm);
-  max-width: 340px;
-  margin-bottom: var(--space-6);
+  font-weight: var(--font-weight-semibold);
+  margin: var(--space-6) 0 var(--space-3);
 }
 
-.featureList {
-  text-align: left;
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-3);
-  width: 100%;
-  max-width: 340px;
-}
-
-.featureRow {
-  display: flex;
-  align-items: flex-start;
-  gap: var(--space-3);
+.card {
   background: var(--color-surface);
   border: 1px solid var(--color-border);
   border-radius: var(--radius-md);
-  padding: var(--space-3) var(--space-4);
+  padding: var(--space-2);
 }
 
-.featureIcon {
-  width: 28px;
-  height: 28px;
-  border-radius: var(--radius-full);
+.chartCard {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  padding: var(--space-4) var(--space-4) var(--space-2);
+  margin-bottom: var(--space-2);
+}
+
+.chartHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: var(--space-3);
+  margin-bottom: var(--space-3);
+  flex-wrap: wrap;
+}
+
+.chartTitle {
+  font-weight: var(--font-weight-semibold);
+  font-size: var(--font-size-sm);
+}
+
+.rangeGroup {
+  display: flex;
+  gap: 2px;
   background: var(--color-surface-alt);
+  border-radius: var(--radius-full);
+  padding: 2px;
+}
+
+.rangeButton {
+  padding: 4px var(--space-3);
+  border-radius: var(--radius-full);
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-medium);
   color: var(--color-text-muted);
+  background: none;
+  min-height: 0;
+}
+
+.rangeButtonActive {
+  background: var(--color-surface);
+  color: var(--color-text);
+  box-shadow: var(--shadow-sm);
+}
+
+.chartWrap {
+  margin: 0 calc(var(--space-4) * -1);
+}
+
+.chartEmpty {
   display: flex;
   align-items: center;
   justify-content: center;
-  flex-shrink: 0;
+  height: 220px;
+  color: var(--color-text-faint);
+  font-size: var(--font-size-sm);
+  text-align: center;
+  padding: 0 var(--space-6);
 }
 
-.featureTitle {
+.row {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  padding: var(--space-3);
+  border-radius: var(--radius-sm);
+}
+
+.rowSelected {
+  background: var(--color-accent-muted);
+}
+
+.checkbox {
+  width: 18px;
+  height: 18px;
+  flex-shrink: 0;
+  accent-color: var(--color-accent);
+}
+
+.rowMain {
+  flex: 1;
+  min-width: 0;
+  cursor: pointer;
+}
+
+.rowName {
+  font-weight: var(--font-weight-medium);
+  font-size: var(--font-size-sm);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.rowSymbol {
+  font-size: var(--font-size-xs);
+  color: var(--color-text-faint);
+}
+
+.rowStats {
+  text-align: right;
+}
+
+.rowPrice {
   font-weight: var(--font-weight-medium);
   font-size: var(--font-size-sm);
 }
 
-.featureBody {
+.rowMuted {
   font-size: var(--font-size-xs);
-  color: var(--color-text-muted);
+  color: var(--color-text-faint);
+}
+
+.rowError {
+  font-size: var(--font-size-xs);
+  color: var(--color-text-faint);
+  text-align: right;
+  max-width: 160px;
+}
+
+.changePositive {
+  font-size: var(--font-size-xs);
+  color: var(--color-positive);
+}
+
+.changeNegative {
+  font-size: var(--font-size-xs);
+  color: var(--color-negative);
+}
+
+.removeButton {
+  width: 28px;
+  height: 28px;
+  min-height: 0;
+  border-radius: var(--radius-full);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--color-text-faint);
+  background: none;
+  flex-shrink: 0;
+}
+
+.removeButton:hover {
+  background: var(--color-surface-alt);
+  color: var(--color-negative);
+}
+
+.addRow {
+  display: flex;
+  align-items: flex-end;
+  gap: var(--space-2);
+  padding: var(--space-3);
+}
+
+.addRow > :first-child {
+  flex: 1;
 }

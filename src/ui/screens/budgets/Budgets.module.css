@@ -168,3 +168,98 @@
   color: var(--color-text-faint);
   font-size: var(--font-size-sm);
 }
+
+.tabBar {
+  display: flex;
+  gap: var(--space-2);
+  margin-bottom: var(--space-5);
+  border-bottom: 1px solid var(--color-border);
+}
+
+.tabButton {
+  padding: var(--space-3) var(--space-1);
+  margin-bottom: -1px;
+  border-bottom: 2px solid transparent;
+  color: var(--color-text-muted);
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-medium);
+  background: none;
+}
+
+.tabButtonActive {
+  color: var(--color-accent);
+  border-bottom-color: var(--color-accent);
+}
+
+.weeklyCard {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  padding: var(--space-4) var(--space-5);
+  margin-bottom: var(--space-6);
+}
+
+.weeklyTitle {
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-semibold);
+  margin-bottom: var(--space-3);
+}
+
+.weeklyRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: var(--font-size-sm);
+  padding: var(--space-1) 0;
+}
+
+.weeklyDot {
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  border-radius: var(--radius-full);
+  margin-right: var(--space-2);
+}
+
+.weeklyLabel {
+  display: flex;
+  align-items: center;
+  color: var(--color-text-muted);
+}
+
+.weeklyBarTrack {
+  display: flex;
+  height: 8px;
+  border-radius: var(--radius-full);
+  overflow: hidden;
+  background: var(--color-surface-alt);
+  margin: var(--space-3) 0 var(--space-2);
+}
+
+.insightCard {
+  border-radius: var(--radius-md);
+  padding: var(--space-3) var(--space-4);
+  font-size: var(--font-size-sm);
+  margin-bottom: var(--space-2);
+}
+
+.insightWarning {
+  background: var(--color-warning-muted);
+  color: var(--color-warning);
+}
+
+.insightPositive {
+  background: var(--color-positive-muted);
+  color: var(--color-positive);
+}
+
+.insightInfo {
+  background: var(--color-surface-alt);
+  color: var(--color-text-muted);
+}
+
+.tipsTitle {
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-semibold);
+  margin: var(--space-6) 0 var(--space-3);
+}

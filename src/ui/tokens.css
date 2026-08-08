@@ -5,52 +5,54 @@
   lands, it should be applied by editing values here (and adding new ones if
   needed), not by touching component files.
 
-  Theme: light is the default; dark applies automatically via
-  prefers-color-scheme, and can be forced either way with
-  documentElement.dataset.theme = "light" | "dark" (Settings screen, later).
+  Theme: Apple system palette (iOS/macOS system colors - blue/green/orange/
+  red, the light-gray-background + white-card "grouped list" look). Light
+  is the default; dark applies automatically via prefers-color-scheme, and
+  can be forced either way with documentElement.dataset.theme = "light" |
+  "dark" (Settings screen, later).
 */
 
 :root {
   /* ---------------------------------------------------------------- color: roles */
-  --color-bg: #f7f8fa;
+  --color-bg: #f2f2f7; /* iOS systemGroupedBackground */
   --color-surface: #ffffff;
-  --color-surface-alt: #eef0f3;
-  --color-border: #dde1e6;
-  --color-text: #16181d;
-  --color-text-muted: #5b6270;
-  --color-text-faint: #8a90a0;
+  --color-surface-alt: #e5e5ea; /* iOS systemGray5 */
+  --color-border: #e3e3e8; /* deliberately close to surface-alt - Apple leans on soft elevation, not hard borders */
+  --color-text: #1c1c1e; /* iOS label */
+  --color-text-muted: #6e6e73; /* Apple secondary gray */
+  --color-text-faint: #8e8e93; /* iOS systemGray */
 
-  --color-accent: #2f6fed;
+  --color-accent: #007aff; /* iOS systemBlue */
   --color-accent-text: #ffffff;
-  --color-accent-muted: #e7eefd;
+  --color-accent-muted: #e8f1ff;
 
-  --color-positive: #1a8a5f;
-  --color-positive-muted: #e3f5ed;
-  --color-warning: #b4790e;
-  --color-warning-muted: #fbf0dc;
-  --color-negative: #c33f3f;
-  --color-negative-muted: #fbe8e8;
+  --color-positive: #34c759; /* iOS systemGreen */
+  --color-positive-muted: #e3f8e9;
+  --color-warning: #ff9500; /* iOS systemOrange */
+  --color-warning-muted: #fff1e0;
+  --color-negative: #ff3b30; /* iOS systemRed */
+  --color-negative-muted: #ffe9e8;
 
-  --color-focus-ring: #2f6fed;
-  --color-overlay: rgb(10 12 16 / 55%);
+  --color-focus-ring: #007aff;
+  --color-overlay: rgb(0 0 0 / 40%);
 
   /* category palette - 10 slots, assigned to categories via colorToken
-     (e.g. "cat-1"). Chosen for light/dark legibility as pairs below. */
-  --color-cat-1: #2f6fed;
-  --color-cat-2: #1a8a5f;
-  --color-cat-3: #b4790e;
-  --color-cat-4: #c33f3f;
-  --color-cat-5: #7a4fd6;
-  --color-cat-6: #0f9aa8;
-  --color-cat-7: #d6607a;
-  --color-cat-8: #6b7280;
-  --color-cat-9: #a06a2f;
-  --color-cat-10: #3f7fc3;
+     (e.g. "cat-1"). The actual iOS/macOS system color set. */
+  --color-cat-1: #007aff; /* blue */
+  --color-cat-2: #34c759; /* green */
+  --color-cat-3: #ff9500; /* orange */
+  --color-cat-4: #ff3b30; /* red */
+  --color-cat-5: #af52de; /* purple */
+  --color-cat-6: #30b0c7; /* teal */
+  --color-cat-7: #ff2d55; /* pink */
+  --color-cat-8: #8e8e93; /* gray */
+  --color-cat-9: #a2845e; /* brown */
+  --color-cat-10: #ffcc00; /* yellow */
 
   /* ---------------------------------------------------------------- type */
   --font-family-base:
-    -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial,
-    sans-serif;
+    -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", Roboto,
+    Helvetica, Arial, sans-serif;
   --font-family-mono: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
 
   --font-size-xs: 0.75rem; /* 12px */
@@ -83,14 +85,21 @@
   --space-16: 4rem; /* 64px */
 
   /* ---------------------------------------------------------------- radii / shadows */
-  --radius-sm: 6px;
-  --radius-md: 12px;
-  --radius-lg: 20px;
+  --radius-sm: 8px;
+  --radius-md: 14px;
+  --radius-lg: 22px;
   --radius-full: 999px;
 
-  --shadow-sm: 0 1px 2px rgb(16 18 24 / 6%);
-  --shadow-md: 0 4px 16px rgb(16 18 24 / 8%);
-  --shadow-lg: 0 12px 32px rgb(16 18 24 / 12%);
+  /* Soft, wide, low-opacity - Apple's elevation reads as a gentle glow,
+     never a hard drop shadow. */
+  --shadow-sm: 0 1px 3px rgb(0 0 0 / 7%);
+  --shadow-md: 0 8px 24px rgb(0 0 0 / 8%);
+  --shadow-lg: 0 16px 40px rgb(0 0 0 / 12%);
+
+  /* Frosted-glass material behind fixed chrome (nav bar) - the vibrancy
+     effect iOS/macOS use for tab bars, toolbars, and sheets. */
+  --material-thin: rgb(255 255 255 / 72%);
+  --material-blur: 20px;
 
   /* ---------------------------------------------------------------- motion */
   --duration-fast: 120ms;
@@ -109,108 +118,115 @@
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --color-bg: #101216;
-    --color-surface: #181b21;
-    --color-surface-alt: #20242c;
-    --color-border: #2c313b;
-    --color-text: #f2f3f5;
-    --color-text-muted: #a7adba;
-    --color-text-faint: #767c8a;
+    --color-bg: #000000; /* iOS dark systemGroupedBackground - true black */
+    --color-surface: #1c1c1e;
+    --color-surface-alt: #2c2c2e;
+    --color-border: #38383a;
+    --color-text: #ffffff;
+    --color-text-muted: #98989d;
+    --color-text-faint: #8e8e93;
 
-    --color-accent: #5c8bff;
-    --color-accent-text: #0b0e14;
-    --color-accent-muted: #1c2a4a;
+    --color-accent: #0a84ff;
+    --color-accent-text: #ffffff;
+    --color-accent-muted: #0f2b4d;
 
-    --color-positive: #3ecf8e;
-    --color-positive-muted: #123526;
-    --color-warning: #e3a83b;
-    --color-warning-muted: #3a2c10;
-    --color-negative: #e2685e;
-    --color-negative-muted: #3a1a18;
+    --color-positive: #30d158;
+    --color-positive-muted: #0f2e1a;
+    --color-warning: #ff9f0a;
+    --color-warning-muted: #3d2a0a;
+    --color-negative: #ff453a;
+    --color-negative-muted: #3d1210;
 
-    --color-focus-ring: #5c8bff;
-    --color-overlay: rgb(0 0 0 / 65%);
+    --color-focus-ring: #0a84ff;
+    --color-overlay: rgb(0 0 0 / 60%);
 
-    --color-cat-1: #5c8bff;
-    --color-cat-2: #3ecf8e;
-    --color-cat-3: #e3a83b;
-    --color-cat-4: #e2685e;
-    --color-cat-5: #a988ff;
-    --color-cat-6: #3fc4d3;
-    --color-cat-7: #ef8fa4;
-    --color-cat-8: #9aa1b0;
-    --color-cat-9: #c99257;
-    --color-cat-10: #7fb0e6;
+    --color-cat-1: #0a84ff;
+    --color-cat-2: #30d158;
+    --color-cat-3: #ff9f0a;
+    --color-cat-4: #ff453a;
+    --color-cat-5: #bf5af2;
+    --color-cat-6: #40c8e0;
+    --color-cat-7: #ff375f;
+    --color-cat-8: #98989d;
+    --color-cat-9: #b58150;
+    --color-cat-10: #ffd60a;
 
-    --shadow-sm: 0 1px 2px rgb(0 0 0 / 30%);
-    --shadow-md: 0 4px 16px rgb(0 0 0 / 34%);
-    --shadow-lg: 0 12px 32px rgb(0 0 0 / 40%);
+    --shadow-sm: 0 1px 2px rgb(0 0 0 / 40%);
+    --shadow-md: 0 8px 24px rgb(0 0 0 / 40%);
+    --shadow-lg: 0 16px 40px rgb(0 0 0 / 48%);
+
+    --material-thin: rgb(28 28 30 / 72%);
   }
 }
 
 /* Manual override, for a future Settings theme toggle */
 :root[data-theme="dark"] {
   color-scheme: dark;
-  --color-bg: #101216;
-  --color-surface: #181b21;
-  --color-surface-alt: #20242c;
-  --color-border: #2c313b;
-  --color-text: #f2f3f5;
-  --color-text-muted: #a7adba;
-  --color-text-faint: #767c8a;
-  --color-accent: #5c8bff;
-  --color-accent-text: #0b0e14;
-  --color-accent-muted: #1c2a4a;
-  --color-positive: #3ecf8e;
-  --color-positive-muted: #123526;
-  --color-warning: #e3a83b;
-  --color-warning-muted: #3a2c10;
-  --color-negative: #e2685e;
-  --color-negative-muted: #3a1a18;
-  --color-focus-ring: #5c8bff;
-  --color-overlay: rgb(0 0 0 / 65%);
-  --color-cat-1: #5c8bff;
-  --color-cat-2: #3ecf8e;
-  --color-cat-3: #e3a83b;
-  --color-cat-4: #e2685e;
-  --color-cat-5: #a988ff;
-  --color-cat-6: #3fc4d3;
-  --color-cat-7: #ef8fa4;
-  --color-cat-8: #9aa1b0;
-  --color-cat-9: #c99257;
-  --color-cat-10: #7fb0e6;
+  --color-bg: #000000;
+  --color-surface: #1c1c1e;
+  --color-surface-alt: #2c2c2e;
+  --color-border: #38383a;
+  --color-text: #ffffff;
+  --color-text-muted: #98989d;
+  --color-text-faint: #8e8e93;
+  --color-accent: #0a84ff;
+  --color-accent-text: #ffffff;
+  --color-accent-muted: #0f2b4d;
+  --color-positive: #30d158;
+  --color-positive-muted: #0f2e1a;
+  --color-warning: #ff9f0a;
+  --color-warning-muted: #3d2a0a;
+  --color-negative: #ff453a;
+  --color-negative-muted: #3d1210;
+  --color-focus-ring: #0a84ff;
+  --color-overlay: rgb(0 0 0 / 60%);
+  --color-cat-1: #0a84ff;
+  --color-cat-2: #30d158;
+  --color-cat-3: #ff9f0a;
+  --color-cat-4: #ff453a;
+  --color-cat-5: #bf5af2;
+  --color-cat-6: #40c8e0;
+  --color-cat-7: #ff375f;
+  --color-cat-8: #98989d;
+  --color-cat-9: #b58150;
+  --color-cat-10: #ffd60a;
+  --shadow-sm: 0 1px 2px rgb(0 0 0 / 40%);
+  --shadow-md: 0 8px 24px rgb(0 0 0 / 40%);
+  --shadow-lg: 0 16px 40px rgb(0 0 0 / 48%);
+  --material-thin: rgb(28 28 30 / 72%);
 }
 
 :root[data-theme="light"] {
   color-scheme: light;
-  --color-bg: #f7f8fa;
+  --color-bg: #f2f2f7;
   --color-surface: #ffffff;
-  --color-surface-alt: #eef0f3;
-  --color-border: #dde1e6;
-  --color-text: #16181d;
-  --color-text-muted: #5b6270;
-  --color-text-faint: #8a90a0;
-  --color-accent: #2f6fed;
+  --color-surface-alt: #e5e5ea;
+  --color-border: #e3e3e8;
+  --color-text: #1c1c1e;
+  --color-text-muted: #6e6e73;
+  --color-text-faint: #8e8e93;
+  --color-accent: #007aff;
   --color-accent-text: #ffffff;
-  --color-accent-muted: #e7eefd;
-  --color-positive: #1a8a5f;
-  --color-positive-muted: #e3f5ed;
-  --color-warning: #b4790e;
-  --color-warning-muted: #fbf0dc;
-  --color-negative: #c33f3f;
-  --color-negative-muted: #fbe8e8;
-  --color-focus-ring: #2f6fed;
-  --color-overlay: rgb(10 12 16 / 55%);
-  --color-cat-1: #2f6fed;
-  --color-cat-2: #1a8a5f;
-  --color-cat-3: #b4790e;
-  --color-cat-4: #c33f3f;
-  --color-cat-5: #7a4fd6;
-  --color-cat-6: #0f9aa8;
-  --color-cat-7: #d6607a;
-  --color-cat-8: #6b7280;
-  --color-cat-9: #a06a2f;
-  --color-cat-10: #3f7fc3;
+  --color-accent-muted: #e8f1ff;
+  --color-positive: #34c759;
+  --color-positive-muted: #e3f8e9;
+  --color-warning: #ff9500;
+  --color-warning-muted: #fff1e0;
+  --color-negative: #ff3b30;
+  --color-negative-muted: #ffe9e8;
+  --color-focus-ring: #007aff;
+  --color-overlay: rgb(0 0 0 / 40%);
+  --color-cat-1: #007aff;
+  --color-cat-2: #34c759;
+  --color-cat-3: #ff9500;
+  --color-cat-4: #ff3b30;
+  --color-cat-5: #af52de;
+  --color-cat-6: #30b0c7;
+  --color-cat-7: #ff2d55;
+  --color-cat-8: #8e8e93;
+  --color-cat-9: #a2845e;
+  --color-cat-10: #ffcc00;
+  --material-thin: rgb(255 255 255 / 72%);
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -219,4 +235,99 @@
     --duration-base: 0ms;
     --duration-slow: 0ms;
   }
+}
+
+/* ====================================================================
+   Design-direction previews - temporary, for comparing options live.
+   Toggled by <ThemePreview>. Remove this block (and the component) once
+   a direction is picked; fold the winner into the :root values above.
+   ==================================================================== */
+
+/* "Vibrant" - bold fintech energy (Cash App / Monzo territory): warm
+   off-white, a punchy money-green accent, rounder and bouncier shapes. */
+[data-preset="vibrant"] {
+  --color-bg: #f5f5f0;
+  --color-surface: #ffffff;
+  --color-surface-alt: #ece9e0;
+  --color-border: #e5e1d3;
+  --color-text: #14171a;
+  --color-text-muted: #666a63;
+  --color-text-faint: #97998f;
+
+  --color-accent: #00d982;
+  --color-accent-text: #06231a;
+  --color-accent-muted: #dcfbee;
+
+  --color-positive: #00d982;
+  --color-positive-muted: #dcfbee;
+  --color-warning: #ff7a45;
+  --color-warning-muted: #ffe9e0;
+  --color-negative: #ff4d6a;
+  --color-negative-muted: #ffe3e8;
+
+  --color-focus-ring: #00d982;
+
+  --color-cat-1: #00d982;
+  --color-cat-2: #ff7a45;
+  --color-cat-3: #ffd23f;
+  --color-cat-4: #ff4d6a;
+  --color-cat-5: #a78bfa;
+  --color-cat-6: #38bdf8;
+  --color-cat-7: #fb7185;
+  --color-cat-8: #94a3b8;
+  --color-cat-9: #c4915c;
+  --color-cat-10: #fbbf24;
+
+  --radius-sm: 10px;
+  --radius-md: 18px;
+  --radius-lg: 28px;
+
+  --shadow-sm: 0 1px 3px rgb(20 23 20 / 6%);
+  --shadow-md: 0 10px 28px rgb(0 217 130 / 14%);
+  --shadow-lg: 0 20px 48px rgb(0 217 130 / 18%);
+}
+
+/* "Editorial" - quiet SaaS-tool minimalism (Notion/Linear territory):
+   near-white throughout, ink-adjacent text, a restrained indigo accent,
+   sharper corners, almost-flat shadows. */
+[data-preset="editorial"] {
+  --color-bg: #ffffff;
+  --color-surface: #ffffff;
+  --color-surface-alt: #f7f7f5;
+  --color-border: #e8e8e6;
+  --color-text: #191919;
+  --color-text-muted: #787774;
+  --color-text-faint: #9b9a97;
+
+  --color-accent: #5e6ad2;
+  --color-accent-text: #ffffff;
+  --color-accent-muted: #eef0fd;
+
+  --color-positive: #4cb782;
+  --color-positive-muted: #e6f4ec;
+  --color-warning: #d4a72c;
+  --color-warning-muted: #fbf3dc;
+  --color-negative: #eb5757;
+  --color-negative-muted: #fdeaea;
+
+  --color-focus-ring: #5e6ad2;
+
+  --color-cat-1: #5e6ad2;
+  --color-cat-2: #4cb782;
+  --color-cat-3: #d4a72c;
+  --color-cat-4: #eb5757;
+  --color-cat-5: #9b6bc9;
+  --color-cat-6: #48a9a6;
+  --color-cat-7: #d98cae;
+  --color-cat-8: #8a8f98;
+  --color-cat-9: #a17f5c;
+  --color-cat-10: #e0c341;
+
+  --radius-sm: 6px;
+  --radius-md: 8px;
+  --radius-lg: 12px;
+
+  --shadow-sm: 0 1px 2px rgb(25 25 25 / 4%);
+  --shadow-md: 0 2px 8px rgb(25 25 25 / 6%);
+  --shadow-lg: 0 8px 24px rgb(25 25 25 / 8%);
 }

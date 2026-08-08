@@ -2,7 +2,7 @@ import { useMemo, useState } from "react";
 import { monthKey } from "../../../domain/dates";
 import { cents, negate } from "../../../domain/money";
 import type { Category, Transaction, TransactionType } from "../../../domain/types";
-import { formatMonthLabel } from "../../../lib/format";
+import { formatLocalDate, formatMonthLabel } from "../../../lib/format";
 import { useAppStore } from "../../../store/appStore";
 import { CategoryIcon } from "../../components/CategoryIcon";
 import { Money } from "../../components/Money";
@@ -116,7 +116,7 @@ export function TransactionList({ onEdit }: TransactionListProps) {
                   </span>
                   <span className={styles.rowMain}>
                     <div className={styles.rowLabel}>{rowLabel(tx, category, goal?.name)}</div>
-                    <div className={styles.rowMeta}>{tx.date}</div>
+                    <div className={styles.rowMeta}>{formatLocalDate(tx.date)}</div>
                   </span>
                 </button>
                 <Money

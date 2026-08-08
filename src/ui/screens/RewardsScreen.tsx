@@ -3,6 +3,7 @@ import { BADGE_CATALOG } from "../../domain/rewards/badges";
 import { levelInfo, nextLevelInfo } from "../../domain/rewards/levels";
 import { computeGoalStreak, computeLoggingStreak, computeOnBudgetStreak } from "../../domain/streaks/streaks";
 import type { Streak } from "../../domain/types";
+import { formatIsoDate } from "../../lib/format";
 import { today } from "../../lib/today";
 import { useAppStore } from "../../store/appStore";
 import { useRewardState } from "../../store/useRewardState";
@@ -109,7 +110,7 @@ export function RewardsScreen() {
               </div>
               <div className={styles.badgeName}>{badge.name}</div>
               <div className={styles.badgeDescription}>{badge.description}</div>
-              {earned && <div className={styles.badgeDate}>{earned.earnedAt.slice(0, 10)}</div>}
+              {earned && <div className={styles.badgeDate}>{formatIsoDate(earned.earnedAt)}</div>}
             </div>
           );
         })}

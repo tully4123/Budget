@@ -1,9 +1,11 @@
 import { useState } from "react";
 import { seedDemoData } from "../../seed/demoData";
+import { useFinnhubKey } from "../../lib/marketData/useFinnhubKey";
 import { today } from "../../lib/today";
 import { useAppStore } from "../../store/appStore";
 import { Button } from "../components/Button";
 import { CategoryIcon } from "../components/CategoryIcon";
+import { TextField } from "../components/TextField";
 import { ScreenHeader } from "../components/ScreenHeader";
 import styles from "./settings/Settings.module.css";
 
@@ -21,6 +23,8 @@ export function SettingsScreen() {
   const updateCategory = useAppStore((s) => s.updateCategory);
   const [busy, setBusy] = useState(false);
   const store = useAppStore();
+  const [finnhubKey, setFinnhubKey] = useFinnhubKey();
+  const [keyDraft, setKeyDraft] = useState(finnhubKey);
 
   async function handleEnableDemo() {
     if (
@@ -92,6 +96,42 @@ export function SettingsScreen() {
                   )}
                 </div>
               ))}
+          </div>
+        </div>
+      </div>
+
+      <div className={styles.section}>
+        <div className={styles.sectionTitle}>Investing data</div>
+        <div className={styles.card}>
+          <p className={styles.demoBody}>
+            Crypto prices need no setup. Stock/S&amp;P 500 data needs a free Finnhub API key -{" "}
+            <a href="https://finnhub.io/register" target="_blank" rel="noreferrer">
+              register here
+            </a>{" "}
+            (no card, ~30 seconds), then paste it below. It's stored only in this browser and sent
+            directly to Finnhub with each request - never through any server of ours.
+          </p>
+          <TextField
+            label="Finnhub API key"
+            value={keyDraft}
+            onChange={(e) => setKeyDraft(e.target.value)}
+            placeholder="Paste your key"
+          />
+          <div className={styles.demoActions}>
+            <Button onClick={() => setFinnhubKey(keyDraft)} disabled={keyDraft === finnhubKey}>
+              Save key
+            </Button>
+            {finnhubKey && (
+              <Button
+                variant="danger"
+                onClick={() => {
+                  setFinnhubKey("");
+                  setKeyDraft("");
+                }}
+              >
+                Remove key
+              </Button>
+            )}
           </div>
         </div>
       </div>

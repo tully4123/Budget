@@ -1,15 +1,23 @@
 import type { ReactElement, SVGProps } from "react";
 import {
+  BagIcon,
+  BookIcon,
   BoxIcon,
   CarIcon,
   CartIcon,
   FilmIcon,
   FlagIcon,
+  GiftIcon,
   HeartIcon,
   HomeIcon,
+  PawIcon,
+  PlaneIcon,
   RepeatIcon,
+  ShieldIcon,
+  SparkleIcon,
   TrendingUpIcon,
   UtensilsIcon,
+  ZapIcon,
 } from "./icons";
 
 const REGISTRY: Record<string, (props: SVGProps<SVGSVGElement>) => ReactElement> = {
@@ -23,6 +31,14 @@ const REGISTRY: Record<string, (props: SVGProps<SVGSVGElement>) => ReactElement>
   box: BoxIcon,
   flag: FlagIcon,
   "trending-up": TrendingUpIcon,
+  zap: ZapIcon,
+  shield: ShieldIcon,
+  bag: BagIcon,
+  sparkle: SparkleIcon,
+  plane: PlaneIcon,
+  book: BookIcon,
+  gift: GiftIcon,
+  paw: PawIcon,
 };
 
 interface CategoryIconProps extends SVGProps<SVGSVGElement> {

@@ -1,13 +1,15 @@
 import { useState } from "react";
 import { localDate } from "../../domain/dates";
+import type { CategoryPreset } from "../../domain/categoryPresets";
 import { formatCents, parseToCents } from "../../domain/money";
-import type { CategoryColorToken, CategoryKind, PayFrequency } from "../../domain/types";
+import type { CategoryColorToken, PayFrequency } from "../../domain/types";
 import { seedDemoData } from "../../seed/demoData";
 import { useFinnhubKey } from "../../lib/marketData/useFinnhubKey";
 import { today } from "../../lib/today";
 import { useAppStore } from "../../store/appStore";
 import { Button } from "../components/Button";
 import { CategoryIcon } from "../components/CategoryIcon";
+import { CategoryPicker } from "../components/CategoryPicker";
 import { Select } from "../components/Select";
 import { TextField } from "../components/TextField";
 import { TrashIcon } from "../components/icons";
@@ -41,14 +43,9 @@ export function SettingsScreen() {
   const [finnhubKey, setFinnhubKey] = useFinnhubKey();
   const [keyDraft, setKeyDraft] = useState(finnhubKey);
 
-  const [newCategoryName, setNewCategoryName] = useState("");
-  const [newCategoryKind, setNewCategoryKind] = useState<Extract<CategoryKind, "need" | "want">>("want");
-
-  function handleAddCategory() {
-    if (!newCategoryName.trim()) return;
+  function handleAddCategory(name: string, kind: CategoryPreset["kind"]) {
     const colorToken = COLOR_TOKENS[categories.length % COLOR_TOKENS.length]!;
-    addCategory({ name: newCategoryName.trim(), iconKey: "box", colorToken, kind: newCategoryKind });
-    setNewCategoryName("");
+    addCategory({ name, iconKey: "box", colorToken, kind });
   }
 
   const [newIncomeName, setNewIncomeName] = useState("");
@@ -208,25 +205,7 @@ export function SettingsScreen() {
                 </div>
               ))}
           </div>
-          <div className={styles.addCategoryRow}>
-            <TextField
-              label="New category name"
-              value={newCategoryName}
-              onChange={(e) => setNewCategoryName(e.target.value)}
-              placeholder="e.g. Pet care"
-            />
-            <Select
-              label="Kind"
-              value={newCategoryKind}
-              onChange={(e) => setNewCategoryKind(e.target.value as "need" | "want")}
-            >
-              <option value="need">Need</option>
-              <option value="want">Want</option>
-            </Select>
-            <Button onClick={handleAddCategory} disabled={!newCategoryName.trim()}>
-              Add category
-            </Button>
-          </div>
+          <CategoryPicker onAdd={handleAddCategory} />
         </div>
       </div>
 

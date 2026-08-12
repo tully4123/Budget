@@ -190,6 +190,82 @@ export function BoxIcon(props: IconProps) {
   );
 }
 
+export function ZapIcon(props: IconProps) {
+  return base(<path d="M13 3 4 14h7l-1 7 9-11h-7l1-7Z" />, props);
+}
+
+export function ShieldIcon(props: IconProps) {
+  return base(
+    <>
+      <path d="M12 3.5 19 6.5v5c0 5-3 8.5-7 9.5-4-1-7-4.5-7-9.5v-5l7-3Z" />
+      <path d="m9.2 12 1.9 1.9 3.7-3.9" />
+    </>,
+    props,
+  );
+}
+
+export function BagIcon(props: IconProps) {
+  return base(
+    <>
+      <path d="M6 8h12l1 12.5a1 1 0 0 1-1 1.5H6a1 1 0 0 1-1-1.5L6 8Z" />
+      <path d="M9 8V6.5a3 3 0 0 1 6 0V8" />
+    </>,
+    props,
+  );
+}
+
+export function SparkleIcon(props: IconProps) {
+  return base(
+    <>
+      <path d="M12 3v4M12 17v4M3 12h4M17 12h4" />
+      <path d="M12 8.5 13.6 12l3.5 1.6-3.5 1.6L12 18.7l-1.6-3.5L7 13.6l3.5-1.6L12 8.5Z" />
+    </>,
+    props,
+  );
+}
+
+export function PlaneIcon(props: IconProps) {
+  return base(
+    <path d="M10.5 20.5 12 15l-6.5-1L3 15.5l1.5-4L3 8.5l2.5 1L12 8l-1.5-5.5L13 2l3 6.5 5-1v3l-5 1.7L13 20l-2.5.5Z" />,
+    props,
+  );
+}
+
+export function BookIcon(props: IconProps) {
+  return base(
+    <>
+      <path d="M4 5.5A2.5 2.5 0 0 1 6.5 3H20v16H6.5A2.5 2.5 0 0 0 4 21.5v-16Z" />
+      <path d="M4 19a2.5 2.5 0 0 1 2.5-2.5H20" />
+    </>,
+    props,
+  );
+}
+
+export function GiftIcon(props: IconProps) {
+  return base(
+    <>
+      <rect x="3.5" y="9" width="17" height="4" rx="0.6" />
+      <path d="M5 13v8h14v-8M12 9v12" />
+      <path d="M12 9c-1.2 0-4-.4-4-2.8A2.2 2.2 0 0 1 10.2 4C12 4 12 7 12 9Z" />
+      <path d="M12 9c1.2 0 4-.4 4-2.8A2.2 2.2 0 0 0 13.8 4C12 4 12 7 12 9Z" />
+    </>,
+    props,
+  );
+}
+
+export function PawIcon(props: IconProps) {
+  return base(
+    <>
+      <ellipse cx="12" cy="16.2" rx="4.6" ry="3.6" />
+      <ellipse cx="6" cy="10.5" rx="1.7" ry="2.2" />
+      <ellipse cx="10.2" cy="7" rx="1.7" ry="2.2" />
+      <ellipse cx="13.8" cy="7" rx="1.7" ry="2.2" />
+      <ellipse cx="18" cy="10.5" rx="1.7" ry="2.2" />
+    </>,
+    props,
+  );
+}
+
 export function TrashIcon(props: IconProps) {
   return base(
     <>

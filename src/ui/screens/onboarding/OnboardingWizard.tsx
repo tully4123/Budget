@@ -2,13 +2,15 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { createDefaultCategories } from "../../../domain/defaultCategories";
 import { localDate } from "../../../domain/dates";
+import type { CategoryPreset } from "../../../domain/categoryPresets";
 import { parseToCents, ZERO_CENTS } from "../../../domain/money";
-import type { Category, GoalPriority, PayFrequency } from "../../../domain/types";
+import type { Category, CategoryColorToken, GoalPriority, PayFrequency } from "../../../domain/types";
 import { createId } from "../../../lib/id";
 import { today } from "../../../lib/today";
 import { useAppStore } from "../../../store/appStore";
 import { Button } from "../../components/Button";
 import { CategoryChips } from "../../components/CategoryChips";
+import { CategoryPicker } from "../../components/CategoryPicker";
 import { Select } from "../../components/Select";
 import { TextField } from "../../components/TextField";
 import { TrashIcon } from "../../components/icons";
@@ -25,6 +27,9 @@ const PRIORITIES: { value: GoalPriority; label: string }[] = [
   { value: "high", label: "High" },
   { value: "medium", label: "Medium" },
   { value: "low", label: "Low" },
+];
+const COLOR_TOKENS: CategoryColorToken[] = [
+  "cat-1", "cat-2", "cat-3", "cat-4", "cat-5", "cat-6", "cat-7", "cat-8", "cat-9", "cat-10",
 ];
 
 interface IncomeDraft {
@@ -58,9 +63,11 @@ export function OnboardingWizard() {
     { key: createId(), name: "", amount: "", frequency: "monthly", nextDate: today() },
   ]);
 
-  // Step 3: categories - full default set generated once, minus the two
-  // system categories which aren't user-toggleable.
-  const [allCategories] = useState<Category[]>(() => createDefaultCategories(createId));
+  // Step 3: categories - full default set generated once (minus the two
+  // system categories, which aren't user-toggleable), plus whatever's
+  // added inline below. Mutable, not a fixed useState initializer, since
+  // "add your own" appends to it.
+  const [allCategories, setAllCategories] = useState<Category[]>(() => createDefaultCategories(createId));
   const pickable = allCategories.filter((c) => !c.isSystem);
   const [selectedIds, setSelectedIds] = useState<string[]>(() => pickable.map((c) => c.id));
 
@@ -167,6 +174,24 @@ export function OnboardingWizard() {
 
   function toggleCategory(id: string) {
     setSelectedIds((ids) => (ids.includes(id) ? ids.filter((x) => x !== id) : [...ids, id]));
+  }
+
+  /** Adds a category (preset or custom) right here in setup, same shape
+   * Settings creates one with later (generic "box" icon, cycling color) -
+   * selected by default since picking it is already the deliberate act;
+   * toggling it off afterward is how you'd remove it. */
+  function addCategory(name: string, kind: CategoryPreset["kind"]) {
+    const colorToken = COLOR_TOKENS[allCategories.length % COLOR_TOKENS.length]!;
+    const category: Category = {
+      id: createId(),
+      name,
+      iconKey: "box",
+      colorToken,
+      kind,
+      isArchived: false,
+    };
+    setAllCategories((cats) => [...cats, category]);
+    setSelectedIds((ids) => [...ids, category.id]);
   }
 
   /** Explicitly abandons whatever's been typed on this step, rather than
@@ -301,11 +326,12 @@ export function OnboardingWizard() {
           <div>
             <h1 className={styles.title}>Confirm your categories</h1>
             <p className={styles.subtitle}>
-              These are where your spending will be tracked. Tap to remove any you don't need - you
-              can always add more later.
+              These are where your spending will be tracked. Tap to remove any you don't need, or add
+              your own below - you can always change this later from Settings too.
             </p>
           </div>
           <CategoryChips mode="multi" categories={pickable} value={selectedIds} onChange={toggleCategory} />
+          <CategoryPicker onAdd={addCategory} />
         </div>
       )}
 

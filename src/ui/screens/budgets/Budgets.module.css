@@ -25,23 +25,25 @@
 }
 
 .allowanceCard {
-  background: var(--color-accent);
-  color: var(--color-accent-text);
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--space-3);
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
   border-radius: var(--radius-lg);
-  padding: var(--space-5);
+  padding: var(--space-4) var(--space-5);
   margin-bottom: var(--space-6);
-  text-align: center;
 }
 
 .allowanceLabel {
   font-size: var(--font-size-sm);
-  opacity: 0.85;
+  font-weight: var(--font-weight-semibold);
 }
 
 .allowanceValue {
-  font-size: var(--font-size-2xl);
+  font-size: var(--font-size-xl);
   font-weight: var(--font-weight-bold);
-  margin-top: var(--space-1);
 }
 
 .rolloverCard {

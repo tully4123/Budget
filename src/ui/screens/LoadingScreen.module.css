@@ -1,7 +1,147 @@
 .wrap {
+  position: fixed;
+  inset: 0;
+  z-index: var(--z-toast);
   display: flex;
-  min-height: 100vh;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
-  color: var(--color-text-muted);
+  gap: var(--space-5);
+  background: var(--color-bg);
+  transition: opacity 450ms var(--easing-standard);
+}
+
+.leaving {
+  opacity: 0;
+  pointer-events: none;
+}
+
+.mark {
+  position: relative;
+  width: 88px;
+  height: 88px;
+  transition: transform 450ms var(--easing-standard);
+}
+
+.leaving .mark {
+  transform: scale(1.12);
+}
+
+.ring {
+  position: absolute;
+  inset: 0;
+  border-radius: var(--radius-full);
+  border: 2px solid var(--color-accent);
+  opacity: 0;
+  animation: ringPulse 1.5s var(--easing-standard) 500ms infinite;
+}
+
+.coin {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  border-radius: var(--radius-full);
+  background: var(--color-accent);
+  color: var(--color-accent-text);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: var(--font-size-2xl);
+  font-weight: var(--font-weight-bold);
+  box-shadow: var(--shadow-lg);
+  animation: popIn 600ms cubic-bezier(0.34, 1.56, 0.64, 1) both;
+}
+
+.name {
+  font-size: var(--font-size-lg);
+  font-weight: var(--font-weight-bold);
+  color: var(--color-text);
+  animation: riseIn 500ms var(--easing-standard) 280ms both;
+}
+
+.dots {
+  display: flex;
+  gap: var(--space-2);
+  animation: riseIn 400ms var(--easing-standard) 600ms both;
+}
+
+.dot {
+  width: 6px;
+  height: 6px;
+  border-radius: var(--radius-full);
+  background: var(--color-text-faint);
+  animation: dotBounce 1s ease-in-out infinite;
+}
+
+.dot:nth-child(2) {
+  animation-delay: 150ms;
+}
+
+.dot:nth-child(3) {
+  animation-delay: 300ms;
+}
+
+@keyframes popIn {
+  from {
+    opacity: 0;
+    transform: scale(0.5);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes ringPulse {
+  0% {
+    opacity: 0.6;
+    transform: scale(1);
+  }
+  100% {
+    opacity: 0;
+    transform: scale(1.7);
+  }
+}
+
+@keyframes riseIn {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes dotBounce {
+  0%,
+  100% {
+    transform: none;
+    opacity: 0.5;
+  }
+  50% {
+    transform: translateY(-4px);
+    opacity: 1;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .coin,
+  .ring,
+  .name,
+  .dots,
+  .dot {
+    animation: none;
+    opacity: 1;
+    transform: none;
+  }
+
+  .ring {
+    opacity: 0;
+  }
+
+  .leaving .mark {
+    transform: none;
+  }
 }
